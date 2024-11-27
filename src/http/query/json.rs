@@ -114,6 +114,21 @@ where
   }
 
   #[must_use]
+  pub fn raw_fields<I>(mut self, fields: I) -> Self
+  where
+    I: IntoIterator<Item = String>,
+  {
+    let set = FieldSet::from_raw(fields);
+    if let Some(current) = &mut self.fields {
+      current.inner.extend(set.inner);
+    } else {
+      self.fields = Some(set);
+    }
+
+    self
+  }
+
+  #[must_use]
   pub fn results(mut self, results: u8) -> Self {
     self.results = Some(results.min(100));
     self

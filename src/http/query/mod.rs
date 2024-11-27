@@ -17,6 +17,16 @@ pub struct FieldSet<T: QueryField> {
 impl<T: QueryField> FieldSet<T> {
   pub const URL_QUERY_PARAM: &'static str = "fields";
 
+  pub fn from_raw<I>(iter: I) -> Self
+  where
+    I: IntoIterator<Item = String>,
+  {
+    Self {
+      inner: iter.into_iter().collect(),
+      marker: PhantomData,
+    }
+  }
+
   pub fn with_capacity(capacity: usize) -> Self {
     Self {
       inner: HashSet::with_capacity(capacity),
@@ -24,13 +34,27 @@ impl<T: QueryField> FieldSet<T> {
     }
   }
 
-  pub fn extend<I: IntoIterator<Item = T>>(&mut self, iter: I) {
+  pub fn extend<I>(&mut self, iter: I)
+  where
+    I: IntoIterator<Item = T>,
+  {
     self
       .inner
       .extend(iter.into_iter().map(|field| field.to_string()));
   }
 
+  pub fn extend_raw<I>(&mut self, iter: I)
+  where
+    I: IntoIterator<Item = String>,
+  {
+    self.inner.extend(iter);
+  }
+
   pub fn insert(&mut self, field: &T) {
+    self.inner.insert(field.to_string());
+  }
+
+  pub fn insert_raw(&mut self, field: &str) {
     self.inner.insert(field.to_string());
   }
 
