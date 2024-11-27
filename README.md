@@ -1,3 +1,3 @@
-# kaguya
+# vn
 
-A Rust interface for the VNDB HTTPS API.
+Rust wrapper for the VNDB API.

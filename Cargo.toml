@@ -1,18 +1,18 @@
 [package]
-name = "kaguya"
+name = "vn"
 version = "0.1.0"
-description = "A Rust library for the VNDB API"
-homepage = "https://github.com/ferreira-tb/kaguya"
-repository = "https://github.com/ferreira-tb/kaguya"
+description = "Rust wrapper for the VNDB API"
+homepage = "https://github.com/ferreira-tb/vn"
+repository = "https://github.com/ferreira-tb/vn"
 authors = ["Andrew Ferreira <andrew.shien2@gmail.com>"]
 license = "MIT"
 edition = "2021"
 rust-version = "1.82"
-keywords = ["vndb", "http", "api"]
+keywords = ["vndb", "http", "api", "visual novel"]
 
 [package.metadata.docs.rs]
 no-default-features = true
-features = []
+features = ["random", "regex"]
 rustc-args = ["--cfg", "docsrs"]
 rustdoc-args = ["--cfg", "docsrs"]
 
@@ -37,6 +37,7 @@ rc_buffer = "deny"
 rc_mutex = "deny"
 rest_pat_in_fully_bound_structs = "deny"
 similar_names = "allow"
+struct_excessive_bools = "allow"
 struct_field_names = "allow"
 unnecessary_safety_comment = "deny"
 unsafe_derive_deserialize = "allow"
@@ -46,23 +47,36 @@ useless_conversion = "deny"
 level = "deny"
 priority = -1
 
-
 [dependencies]
-bon = "3.0"
+bon = "3.1"
 futures = "0.3"
+http = "1.1"
 itertools = "0.13"
-rand = "0.8"
+remain = "0.2"
 serde_json = "1.0"
 thiserror = "2.0"
+url = "2.5"
+
+[dependencies.ahash]
+version = "0.8"
+features = ["serde"]
+
+[dependencies.rand]
+version = "0.8"
+optional = true
+
+[dependencies.regex]
+version = "1.11"
+optional = true
 
 [dependencies.reqwest]
 version = "0.12"
-features = ["brotli", "deflate", "gzip", "json", "rustls-tls"]
+features = ["json", "rustls-tls"]
 
 [dependencies.specta]
 version = "2.0.0-rc.20"
 optional = true
-features = ["serde", "serde_json"]
+features = ["derive", "serde", "serde_json"]
 
 [dependencies.serde]
 version = "1.0"
@@ -77,4 +91,6 @@ version = "1.41"
 features = ["full"]
 
 [features]
+random = ["dep:rand"]
+regex = ["dep:regex"]
 specta = ["dep:specta"]
