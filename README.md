@@ -49,7 +49,7 @@ use vn::{Vndb, CharacterField, SortCharacterBy};
 
 let vndb = Vndb::new();
 let results = vndb
-  .search_character("Kaburagi Yukari")
+  .search_character("Minazuki Shigure")
   .fields([CharacterField::Name, CharacterField::Original])
   .results(10)
   .sort(SortCharacterBy::Name)
@@ -62,6 +62,6 @@ let character = results.first().unwrap();
 let name = character.name.as_deref().unwrap();
 let original = character.original.as_deref().unwrap();
 
-assert!(name.eq_ignore_ascii_case("Kaburagi Yukari"));
-assert_eq!(original, "鏑木 紫");
+assert!(name.eq_ignore_ascii_case("Minazuki Shigure"));
+assert_eq!(original, "水無月 時雨");
 ```
