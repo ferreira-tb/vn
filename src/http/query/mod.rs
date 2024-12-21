@@ -2,9 +2,9 @@ mod json;
 mod url;
 
 use crate::model::QueryField;
-use ahash::{HashSet, HashSetExt};
 use itertools::Itertools;
 pub use json::{JsonQuery, JsonQueryBuilder, JsonQueryFilter};
+use std::collections::HashSet;
 use std::marker::PhantomData;
 pub use url::UrlQueryParams;
 

@@ -4,9 +4,8 @@ use crate::{
   impl_id_newtype, impl_id_newtype_from_numeric, impl_into_field_set, impl_string_set,
   impl_string_set_from_newtype, impl_string_set_from_numeric,
 };
-use ahash::HashSet;
 use serde::{Deserialize, Deserializer, Serialize};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::ops::{Deref, DerefMut};
 use std::result::Result as StdResult;
 use strum::{Display, VariantArray};

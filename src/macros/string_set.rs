@@ -4,12 +4,12 @@ macro_rules! impl_string_set {
   ($target:ident) => {
     impl $target {
       pub fn new() -> Self {
-        use ahash::{HashSet, HashSetExt};
+        use std::collections::HashSet;
         Self(HashSet::new())
       }
 
       pub fn with_capacity(capacity: usize) -> Self {
-        use ahash::{HashSet, HashSetExt};
+        use std::collections::HashSet;
         Self(HashSet::with_capacity(capacity))
       }
 
@@ -58,7 +58,7 @@ macro_rules! impl_string_set {
 
     impl From<String> for $target {
       fn from(id: String) -> Self {
-        use ahash::HashSet;
+        use std::collections::HashSet;
         Self(HashSet::from_iter([id]))
       }
     }
