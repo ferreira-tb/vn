@@ -1,7 +1,5 @@
 # vn
 
-Rust wrapper for the VNDB API.
-
 ```toml
 [dependencies]
 vn = 0.1
