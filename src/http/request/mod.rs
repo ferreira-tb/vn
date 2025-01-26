@@ -42,7 +42,7 @@ where
 {
   let permit = semaphore
     .upgrade()
-    .expect("semaphore dropped")
+    .unwrap()
     .acquire_owned()
     .await
     .map_err(|_| Error::ClientClosed)?;
