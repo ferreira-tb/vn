@@ -8,8 +8,8 @@ use http::Method;
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 use std::sync::Weak;
-use std::time::Duration;
 use tokio::sync::Semaphore;
+use tokio::time::Duration;
 
 pub mod prelude {
   pub use super::{
@@ -87,8 +87,9 @@ async fn post_json<Body, Json>(
   #[builder(start_fn)] endpoint: Endpoint,
   #[builder(start_fn)] body: &Body,
   query: Option<UrlQueryParams>,
-  semaphore: &Semaphore,
+  semaphore: Weak<Semaphore>,
   token: Option<&Token>,
+  delay: Option<Duration>,
   timeout: Option<Duration>,
   user_agent: Option<&str>,
 ) -> Result<Json>
@@ -102,6 +103,7 @@ where
     .body(body)
     .maybe_query(query)
     .maybe_token(token)
+    .maybe_delay(delay)
     .maybe_timeout(timeout)
     .maybe_user_agent(user_agent)
     .call()

@@ -9,9 +9,10 @@ use reqwest::header::{AUTHORIZATION, CONTENT_TYPE, USER_AGENT};
 use reqwest::{Client, Response as RawResponse};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
-use std::sync::LazyLock;
-use std::time::Duration;
-use tokio::sync::Semaphore;
+use std::sync::{LazyLock, Weak};
+use tokio::sync::{OwnedSemaphorePermit, Semaphore};
+use tokio::task::spawn;
+use tokio::time::{sleep, Duration};
 
 pub const BASE_URL: &str = "https://api.vndb.org/kana";
 const DEFAULT_USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
@@ -28,18 +29,21 @@ static HTTP: LazyLock<Client> = LazyLock::new(|| {
 pub(super) async fn request<Body>(
   #[builder(start_fn)] endpoint: Endpoint,
   method: Method,
-  semaphore: &Semaphore,
+  semaphore: Weak<Semaphore>,
   query: Option<UrlQueryParams>,
   body: Option<&Body>,
   token: Option<&Token>,
+  delay: Option<Duration>,
   timeout: Option<Duration>,
   user_agent: Option<&str>,
 ) -> Result<RawResponse>
 where
   Body: Serialize + ?Sized,
 {
-  let _permit = semaphore
-    .acquire()
+  let permit = semaphore
+    .upgrade()
+    .expect("semaphore dropped")
+    .acquire_owned()
     .await
     .map_err(|_| Error::ClientClosed)?;
 
@@ -69,21 +73,26 @@ where
     request = request.header(USER_AGENT, DEFAULT_USER_AGENT);
   }
 
-  request
-    .send()
-    .await?
-    .error_for_status()
-    .map_err(Into::into)
+  let response = request.send().await?.error_for_status()?;
+
+  if let Some(delay) = delay {
+    delay_drop(permit, delay);
+  } else {
+    drop(permit);
+  }
+
+  Ok(response)
 }
 
 #[bon::builder]
 pub(super) async fn request_json<Body, Json>(
   #[builder(start_fn)] endpoint: Endpoint,
-  semaphore: &Semaphore,
+  semaphore: Weak<Semaphore>,
   method: Method,
   query: Option<UrlQueryParams>,
   body: Option<&Body>,
   token: Option<&Token>,
+  delay: Option<Duration>,
   timeout: Option<Duration>,
   user_agent: Option<&str>,
 ) -> Result<Json>
@@ -97,6 +106,7 @@ where
     .maybe_query(query)
     .maybe_body(body)
     .maybe_token(token)
+    .maybe_delay(delay)
     .maybe_timeout(timeout)
     .maybe_user_agent(user_agent)
     .call()
@@ -104,4 +114,11 @@ where
     .json()
     .await
     .map_err(Into::into)
+}
+
+fn delay_drop(permit: OwnedSemaphorePermit, duration: Duration) {
+  spawn(async move {
+    sleep(duration).await;
+    drop(permit);
+  });
 }

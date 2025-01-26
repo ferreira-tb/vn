@@ -36,8 +36,9 @@ static TRAIT_AMOUNT: OnceLock<u32> = OnceLock::new();
 
 #[derive(Debug)]
 pub struct Vndb {
-  pub(crate) semaphore: Semaphore,
+  pub(crate) semaphore: Arc<Semaphore>,
   pub(crate) token: Option<Token>,
+  pub(crate) delay: Option<Duration>,
   pub(crate) timeout: Option<Duration>,
   pub(crate) user_agent: Option<String>,
 }
@@ -47,8 +48,9 @@ impl Vndb {
     let concurrent_requests = usize::from(CONCURRENCY.get());
     let semaphore = Semaphore::new(concurrent_requests);
     Arc::new(Self {
-      semaphore,
+      semaphore: Arc::new(semaphore),
       token: None,
+      delay: None,
       timeout: None,
       user_agent: None,
     })
@@ -289,6 +291,7 @@ impl Vndb {
 pub struct VndbBuilder {
   max_concurrent_requests: NonZeroU8,
   token: Option<Token>,
+  delay: Option<Duration>,
   timeout: Option<Duration>,
   user_agent: Option<String>,
 }
@@ -311,6 +314,12 @@ impl VndbBuilder {
   }
 
   #[must_use]
+  pub fn delay(mut self, delay: Duration) -> Self {
+    self.delay = Some(delay);
+    self
+  }
+
+  #[must_use]
   pub fn timeout(mut self, timeout: Duration) -> Self {
     self.timeout = Some(timeout);
     self
@@ -324,9 +333,11 @@ impl VndbBuilder {
 
   pub fn build(self) -> Arc<Vndb> {
     let max_concurrent_requests = self.max_concurrent_requests.get();
+    let semaphore = Semaphore::new(usize::from(max_concurrent_requests));
     let vndb = Vndb {
-      semaphore: Semaphore::new(usize::from(max_concurrent_requests)),
+      semaphore: Arc::new(semaphore),
       token: self.token,
+      delay: self.delay,
       timeout: self.timeout,
       user_agent: self.user_agent,
     };
@@ -340,6 +351,7 @@ impl Default for VndbBuilder {
     Self {
       max_concurrent_requests: CONCURRENCY,
       token: None,
+      delay: None,
       timeout: None,
       user_agent: None,
     }

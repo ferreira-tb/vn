@@ -2,6 +2,7 @@ use reqwest::StatusCode;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
+#[non_exhaustive]
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
   #[error("client is closed")]
@@ -18,7 +19,7 @@ pub enum Error {
     status: Option<StatusCode>,
     reason: String,
   },
-  
+
   #[error("not authorized: token needed")]
   TokenNeeded,
 }

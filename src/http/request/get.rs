@@ -8,8 +8,8 @@ use http::Method;
 use reqwest::Response as RawResponse;
 use serde::de::DeserializeOwned;
 use std::sync::Weak;
-use std::time::Duration;
 use tokio::sync::Semaphore;
+use tokio::time::Duration;
 
 pub struct Get {
   vndb: Weak<Vndb>,
@@ -67,9 +67,10 @@ impl Clone for Get {
 #[bon::builder]
 async fn get(
   #[builder(start_fn)] endpoint: Endpoint,
-  semaphore: &Semaphore,
+  semaphore: Weak<Semaphore>,
   query: Option<UrlQueryParams>,
   token: Option<&Token>,
+  delay: Option<Duration>,
   timeout: Option<Duration>,
   user_agent: Option<&str>,
 ) -> Result<RawResponse> {
@@ -78,6 +79,7 @@ async fn get(
     .semaphore(semaphore)
     .maybe_query(query)
     .maybe_token(token)
+    .maybe_delay(delay)
     .maybe_timeout(timeout)
     .maybe_user_agent(user_agent)
     .call()
@@ -87,9 +89,10 @@ async fn get(
 #[bon::builder]
 async fn get_json<Json>(
   #[builder(start_fn)] endpoint: Endpoint,
-  semaphore: &Semaphore,
+  semaphore: Weak<Semaphore>,
   query: Option<UrlQueryParams>,
   token: Option<&Token>,
+  delay: Option<Duration>,
   timeout: Option<Duration>,
   user_agent: Option<&str>,
 ) -> Result<Json>
@@ -101,6 +104,7 @@ where
     .semaphore(semaphore)
     .maybe_query(query)
     .maybe_token(token)
+    .maybe_delay(delay)
     .maybe_timeout(timeout)
     .maybe_user_agent(user_agent)
     .call()

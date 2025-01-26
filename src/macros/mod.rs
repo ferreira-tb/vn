@@ -7,8 +7,9 @@ mod string_set;
 macro_rules! make_request {
   ($vndb:expr, $request:expr) => {{
     $request
-      .semaphore(&$vndb.semaphore)
+      .semaphore(std::sync::Arc::downgrade(&$vndb.semaphore))
       .maybe_token($vndb.token.as_ref())
+      .maybe_delay($vndb.delay.clone())
       .maybe_timeout($vndb.timeout.clone())
       .maybe_user_agent($vndb.user_agent.as_deref())
       .call()
