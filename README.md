@@ -2,7 +2,7 @@
 
 ```toml
 [dependencies]
-vn = 0.2
+vn = 0.3
 ```
 
 ## Usage
@@ -17,7 +17,7 @@ let vndb = Vndb::builder()
   .max_concurrent_requests(5)
   .timeout(Duration::from_secs(10))
   .token("abcd-efghi-jklmn-opqrs-tuvx-z1234-5678")
-  .user_agent("the-user-agent/v5.0")
+  .user_agent("some-user-agent/v5.0")
   .build();
 ```
 

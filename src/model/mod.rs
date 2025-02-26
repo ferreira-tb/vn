@@ -11,13 +11,13 @@ pub mod user;
 pub mod visual_novel;
 
 pub mod prelude {
+  pub use super::Response;
   pub use super::auth_info::{AuthInfo, TokenPermission};
   pub use super::character::{
     Character, CharacterBirthday, CharacterField, CharacterId, CharacterImage, CharacterSex,
     CharacterSexValue, CharacterTrait, CharacterVisualNovel, SortCharacterBy,
   };
   pub use super::producer::{Producer, ProducerField, ProducerId, ProducerType, SortProducerBy};
-  pub use super::r#trait::{SortTraitBy, Trait, TraitField, TraitId};
   pub use super::release::{
     ExternalLink, Release, ReleaseField, ReleaseId, ReleaseImage, ReleaseImageType,
     ReleaseLanguage, ReleaseMedia, ReleaseProducer, ReleaseResolution, ReleaseType,
@@ -27,6 +27,7 @@ pub mod prelude {
   pub use super::staff::{SortStaffBy, Staff, StaffAlias, StaffField, StaffGender, StaffId};
   pub use super::stats::Stats;
   pub use super::tag::{SortTagBy, Tag, TagCategory, TagField, TagId};
+  pub use super::r#trait::{SortTraitBy, Trait, TraitField, TraitId};
   pub use super::user::{User, UserField, UserId, UserUrlQuery, Users};
   pub use super::visual_novel::{
     SortVisualNovelBy, VisualNovel, VisualNovelDevStatus, VisualNovelDeveloper, VisualNovelEdition,
@@ -34,7 +35,6 @@ pub mod prelude {
     VisualNovelScreenShot, VisualNovelStaff, VisualNovelTag, VisualNovelTitle,
     VisualNovelVoiceActor,
   };
-  pub use super::Response;
 }
 
 use serde::{Deserialize, Serialize};
