@@ -3,10 +3,10 @@ use crate::http::request::get::Get;
 use crate::http::request::post::prelude::*;
 use crate::model::character::CharacterId;
 use crate::model::producer::ProducerId;
-use crate::model::r#trait::TraitId;
 use crate::model::release::ReleaseId;
 use crate::model::staff::StaffId;
 use crate::model::tag::TagId;
+use crate::model::r#trait::TraitId;
 use crate::model::user::{User, UserField, UserId};
 use crate::model::visual_novel::VisualNovelId;
 use std::num::NonZeroU8;
@@ -18,8 +18,7 @@ use tokio::sync::Semaphore;
 #[cfg(feature = "random")]
 use {std::ops::RangeInclusive, std::sync::OnceLock};
 
-// SAFETY: Safe as long as the value is not zero.
-const CONCURRENCY: NonZeroU8 = unsafe { NonZeroU8::new_unchecked(10) };
+const CONCURRENCY: NonZeroU8 = NonZeroU8::new(10).unwrap();
 
 #[cfg(feature = "random")]
 static CHARACTER_AMOUNT: OnceLock<u32> = OnceLock::new();
@@ -56,12 +55,12 @@ impl Vndb {
     })
   }
 
-  pub fn with_token(token: impl Into<Token>) -> Arc<Self> {
-    Self::builder().token(token).build()
-  }
-
   pub fn builder() -> VndbBuilder {
     VndbBuilder::new()
+  }
+
+  pub fn with_token(token: impl Into<Token>) -> Arc<Self> {
+    Self::builder().token(token).build()
   }
 
   pub fn get(self: &Arc<Self>) -> Get {

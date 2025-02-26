@@ -2,9 +2,9 @@ mod query;
 pub mod request;
 
 pub use query::{FieldSet, JsonQuery, JsonQueryBuilder, JsonQueryFilter, UrlQueryParams};
+pub use request::BASE_URL;
 pub use request::get::Get;
 pub use request::post::Post;
-pub use request::BASE_URL;
 use serde::{Deserialize, Serialize};
 use strum::{Display, VariantArray};
 use url::Url;

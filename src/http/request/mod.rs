@@ -7,12 +7,12 @@ use crate::vndb::Token;
 use http::Method;
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE, USER_AGENT};
 use reqwest::{Client, Response as RawResponse};
-use serde::de::DeserializeOwned;
 use serde::Serialize;
+use serde::de::DeserializeOwned;
 use std::sync::{LazyLock, Weak};
 use tokio::sync::{OwnedSemaphorePermit, Semaphore};
 use tokio::task::spawn;
-use tokio::time::{sleep, Duration};
+use tokio::time::{Duration, sleep};
 
 pub const BASE_URL: &str = "https://api.vndb.org/kana";
 const DEFAULT_USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));

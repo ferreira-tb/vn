@@ -1,5 +1,5 @@
-use super::r#trait::Trait;
 use super::release::Release;
+use super::r#trait::Trait;
 use super::visual_novel::VisualNovel;
 use super::{QueryField, SortQueryBy};
 use crate::{impl_id_newtype, impl_id_newtype_from_numeric, impl_into_field_set};
