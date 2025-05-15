@@ -1,6 +1,6 @@
 [package]
 name = "vn"
-version = "0.4.1"
+version = "0.4.2"
 description = "VNDB for Rust"
 homepage = "https://github.com/ferreira-tb/vn"
 repository = "https://github.com/ferreira-tb/vn"
@@ -85,7 +85,11 @@ features = ["derive"]
 
 [dependencies.tokio]
 version = "1.44"
-features = ["full"]
+default-features = false
+
+[dev-dependencies.tokio]
+version = "1.44"
+features = ["macros", "test-util"]
 
 [features]
 random = ["dep:rand"]
