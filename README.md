@@ -2,7 +2,7 @@
 
 ```toml
 [dependencies]
-vn = 0.3
+vn = 0.4
 ```
 
 ## Usage
@@ -37,7 +37,7 @@ let results = vndb
 
 let visual_novel = results.first().unwrap();
 let title = visual_novel.title.as_deref().unwrap();
-assert!(title.eq_ignore_ascii_case("Yosuga no Sora"));
+assert_eq!(title, "Yosuga no Sora");
 ```
 
 Search characters by their name:
@@ -60,6 +60,6 @@ let character = results.first().unwrap();
 let name = character.name.as_deref().unwrap();
 let original = character.original.as_deref().unwrap();
 
-assert!(name.eq_ignore_ascii_case("Minazuki Shigure"));
+assert_eq!(name, "Minazuki Shigure");
 assert_eq!(original, "水無月 時雨");
 ```
