@@ -48,20 +48,17 @@ macro_rules! impl_id_newtype_regex {
   ($target:ident, $regex:expr) => {
     impl $target {
       #[cfg(feature = "regex")]
-      #[cfg_attr(docsrs, doc(cfg(feature = "regex")))]
       pub fn regex() -> &'static regex::Regex {
         &$regex
       }
 
       #[cfg(feature = "regex")]
-      #[cfg_attr(docsrs, doc(cfg(feature = "regex")))]
       pub fn parse(s: impl AsRef<str>) -> $crate::error::Result<Self> {
         let id = Self(s.as_ref().to_owned());
         id.validate().map(|()| id)
       }
 
       #[cfg(feature = "regex")]
-      #[cfg_attr(docsrs, doc(cfg(feature = "regex")))]
       pub fn validate(&self) -> $crate::error::Result<()> {
         if $regex.is_match(&self.0) {
           Ok(())

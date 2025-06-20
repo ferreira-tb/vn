@@ -223,64 +223,63 @@ macro_rules! random {
   }};
 }
 
-#[cfg(feature = "random")]
 impl Vndb {
-  #[cfg_attr(docsrs, doc(cfg(feature = "random")))]
+  #[cfg(feature = "random")]
   pub async fn random_character(self: &Arc<Self>) -> Result<CharacterQuery> {
     random!(self, CHARACTER_AMOUNT, characters, find_character)
   }
 
-  #[cfg_attr(docsrs, doc(cfg(feature = "random")))]
+  #[cfg(feature = "random")]
   pub async fn random_character_in(self: &Arc<Self>, range: RangeInclusive<u32>) -> CharacterQuery {
     random_in!(self, range, find_character)
   }
 
-  #[cfg_attr(docsrs, doc(cfg(feature = "random")))]
+  #[cfg(feature = "random")]
   pub async fn random_producer(self: &Arc<Self>) -> Result<ProducerQuery> {
     random!(self, PRODUCER_AMOUNT, producers, find_producer)
   }
 
-  #[cfg_attr(docsrs, doc(cfg(feature = "random")))]
+  #[cfg(feature = "random")]
   pub async fn random_producer_in(self: &Arc<Self>, range: RangeInclusive<u32>) -> ProducerQuery {
     random_in!(self, range, find_producer)
   }
 
-  #[cfg_attr(docsrs, doc(cfg(feature = "random")))]
+  #[cfg(feature = "random")]
   pub async fn random_release(self: &Arc<Self>) -> Result<ReleaseQuery> {
     random!(self, RELEASE_AMOUNT, release, find_release)
   }
 
-  #[cfg_attr(docsrs, doc(cfg(feature = "random")))]
+  #[cfg(feature = "random")]
   pub async fn random_release_in(self: &Arc<Self>, range: RangeInclusive<u32>) -> ReleaseQuery {
     random_in!(self, range, find_release)
   }
 
-  #[cfg_attr(docsrs, doc(cfg(feature = "random")))]
+  #[cfg(feature = "random")]
   pub async fn random_staff(self: &Arc<Self>) -> Result<StaffQuery> {
     random!(self, STAFF_AMOUNT, staff, find_staff)
   }
 
-  #[cfg_attr(docsrs, doc(cfg(feature = "random")))]
+  #[cfg(feature = "random")]
   pub async fn random_staff_in(self: &Arc<Self>, range: RangeInclusive<u32>) -> StaffQuery {
     random_in!(self, range, find_staff)
   }
 
-  #[cfg_attr(docsrs, doc(cfg(feature = "random")))]
+  #[cfg(feature = "random")]
   pub async fn random_tag(self: &Arc<Self>) -> Result<TagQuery> {
     random!(self, TAG_AMOUNT, tag, find_tag)
   }
 
-  #[cfg_attr(docsrs, doc(cfg(feature = "random")))]
+  #[cfg(feature = "random")]
   pub async fn random_tag_in(self: &Arc<Self>, range: RangeInclusive<u32>) -> TagQuery {
     random_in!(self, range, find_tag)
   }
 
-  #[cfg_attr(docsrs, doc(cfg(feature = "random")))]
+  #[cfg(feature = "random")]
   pub async fn random_trait(self: &Arc<Self>) -> Result<TraitQuery> {
     random!(self, TRAIT_AMOUNT, r#trait, find_trait)
   }
 
-  #[cfg_attr(docsrs, doc(cfg(feature = "random")))]
+  #[cfg(feature = "random")]
   pub async fn random_trait_in(self: &Arc<Self>, range: RangeInclusive<u32>) -> TraitQuery {
     random_in!(self, range, find_trait)
   }
