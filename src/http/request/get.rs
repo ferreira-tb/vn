@@ -1,11 +1,10 @@
-use super::{request, request_json};
+use super::request_json;
 use crate::error::{Error, Result};
 use crate::http::{Endpoint, FieldSet, UrlQueryParams};
 use crate::make_request;
 use crate::model::prelude::*;
 use crate::vndb::{Token, Vndb};
 use http::Method;
-use reqwest::Response as RawResponse;
 use serde::de::DeserializeOwned;
 use std::sync::Weak;
 use tokio::sync::Semaphore;
@@ -62,28 +61,6 @@ impl Clone for Get {
   fn clone(&self) -> Self {
     Self { vndb: Weak::clone(&self.vndb) }
   }
-}
-
-#[bon::builder]
-async fn get(
-  #[builder(start_fn)] endpoint: Endpoint,
-  semaphore: Weak<Semaphore>,
-  query: Option<UrlQueryParams>,
-  token: Option<&Token>,
-  delay: Option<Duration>,
-  timeout: Option<Duration>,
-  user_agent: Option<&str>,
-) -> Result<RawResponse> {
-  request::<()>(endpoint)
-    .method(Method::GET)
-    .semaphore(semaphore)
-    .maybe_query(query)
-    .maybe_token(token)
-    .maybe_delay(delay)
-    .maybe_timeout(timeout)
-    .maybe_user_agent(user_agent)
-    .call()
-    .await
 }
 
 #[bon::builder]
