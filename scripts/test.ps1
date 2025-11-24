@@ -1,5 +1,5 @@
 $ErrorActionPreference = 'Stop'
 $PSNativeCommandUseErrorActionPreference = $true
 
-cargo +nightly clippy
+cargo clippy --workspace
 cargo test --tests -- --test-threads=1

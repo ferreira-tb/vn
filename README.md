@@ -2,7 +2,7 @@
 
 ```toml
 [dependencies]
-vn = 0.4
+vn = 0.6
 ```
 
 ## Usage

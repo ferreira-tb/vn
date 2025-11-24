@@ -1,5 +1,5 @@
-#![cfg_attr(docsrs, feature(doc_auto_cfg))]
-#![doc = include_str!("../README.md")]
+#![cfg_attr(docsrs, feature(doc_cfg))]
+#![doc = include_str!("../../../README.md")]
 
 pub mod error;
 pub mod http;
@@ -9,4 +9,4 @@ mod vndb;
 
 pub use http::Endpoint;
 pub use model::prelude::*;
-pub use vndb::Vndb;
+pub use vndb::{Token, Vndb};

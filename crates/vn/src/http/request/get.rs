@@ -22,7 +22,7 @@ impl Get {
   pub async fn auth_info(&self) -> Result<AuthInfo> {
     let vndb = Vndb::upgrade(&self.vndb)?;
     if vndb.token.is_none() {
-      return Err(Error::TokenNeeded);
+      return Err(Error::Unauthorized);
     }
 
     make_request!(vndb, get_json(Endpoint::AuthInfo))
