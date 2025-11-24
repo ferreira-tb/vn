@@ -1,17 +1,18 @@
 use reqwest::StatusCode;
+use strum::EnumIs;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
 #[non_exhaustive]
-#[derive(Debug, thiserror::Error)]
+#[derive(Debug, EnumIs, thiserror::Error)]
 pub enum Error {
-  #[error("client is closed")]
-  ClientClosed,
+  #[error("Client disconnected")]
+  Disconnected,
 
   #[error("\"{0}\" is not a valid id")]
   InvalidId(String),
 
-  #[error("failed to parse JSON: {0}")]
+  #[error("Failed to parse JSON: {0}")]
   Json(#[from] serde_json::Error),
 
   #[error("{}", reqwest_error(*status, reason))]
@@ -20,14 +21,8 @@ pub enum Error {
     reason: String,
   },
 
-  #[error("not authorized: token needed")]
-  TokenNeeded,
-}
-
-impl Error {
-  pub fn is_token_needed(&self) -> bool {
-    matches!(self, Self::TokenNeeded)
-  }
+  #[error("Unauthorized: token needed")]
+  Unauthorized,
 }
 
 impl From<reqwest::Error> for Error {

@@ -190,7 +190,7 @@ impl<'de> Deserialize<'de> for ReleaseVoiced {
       2 => Ok(ReleaseVoiced::OnlyEroScenes),
       3 => Ok(ReleaseVoiced::PartiallyVoiced),
       4 => Ok(ReleaseVoiced::FullyVoiced),
-      _ => Err(D::Error::custom("invalid release voiced value")),
+      _ => Err(D::Error::custom("Invalid release voiced value")),
     }
   }
 }

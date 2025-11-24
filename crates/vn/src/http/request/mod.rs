@@ -45,7 +45,7 @@ where
     .unwrap()
     .acquire_owned()
     .await
-    .map_err(|_| Error::ClientClosed)?;
+    .map_err(|_| Error::Disconnected)?;
 
   let mut url = endpoint.url();
   if let Some(query) = query {

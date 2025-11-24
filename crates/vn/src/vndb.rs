@@ -15,23 +15,7 @@ use std::sync::{Arc, Weak};
 use std::time::Duration;
 use tokio::sync::Semaphore;
 
-#[cfg(feature = "random")]
-use {std::ops::RangeInclusive, std::sync::OnceLock};
-
 const CONCURRENCY: NonZeroU8 = NonZeroU8::new(10).unwrap();
-
-#[cfg(feature = "random")]
-static CHARACTER_AMOUNT: OnceLock<u32> = OnceLock::new();
-#[cfg(feature = "random")]
-static PRODUCER_AMOUNT: OnceLock<u32> = OnceLock::new();
-#[cfg(feature = "random")]
-static RELEASE_AMOUNT: OnceLock<u32> = OnceLock::new();
-#[cfg(feature = "random")]
-static STAFF_AMOUNT: OnceLock<u32> = OnceLock::new();
-#[cfg(feature = "random")]
-static TAG_AMOUNT: OnceLock<u32> = OnceLock::new();
-#[cfg(feature = "random")]
-static TRAIT_AMOUNT: OnceLock<u32> = OnceLock::new();
 
 #[derive(Debug)]
 pub struct Vndb {
@@ -72,14 +56,17 @@ impl Vndb {
   }
 
   pub(crate) fn upgrade(weak: &Weak<Self>) -> Result<Arc<Self>> {
-    weak.upgrade().ok_or(Error::ClientClosed)
+    weak.upgrade().ok_or(Error::Disconnected)
   }
 }
 
 macro_rules! find {
   ($vndb:expr, $id:expr, $post_fn:ident, $field:ident) => {{
     let filters = serde_json::json!(["id", "=", $id]);
-    $vndb.post().$post_fn().filters(filters.into())
+    $vndb
+      .post()
+      .$post_fn()
+      .filters(filters.into())
   }};
 }
 
@@ -87,7 +74,10 @@ macro_rules! search {
   ($vndb:expr, $query:expr, $post_fn:ident, $field:ident) => {{
     let query = $query.as_ref();
     let filters = serde_json::json!(["search", "=", query]);
-    $vndb.post().$post_fn().filters(filters.into())
+    $vndb
+      .post()
+      .$post_fn()
+      .filters(filters.into())
   }};
 }
 
@@ -193,98 +183,6 @@ impl Vndb {
   }
 }
 
-#[cfg(feature = "random")]
-macro_rules! random_in {
-  ($vndb:expr, $range:expr, $find_fn:ident) => {{
-    use rand::seq::IteratorRandom;
-    use rand::thread_rng;
-
-    let id = $range
-      .choose(&mut thread_rng())
-      .unwrap_or_default();
-
-    $vndb.$find_fn(id)
-  }};
-}
-
-#[cfg(feature = "random")]
-macro_rules! random {
-  ($vndb:expr, $cache:ident, $stats:ident, $find_fn:ident) => {{
-    let amount = match $cache.get() {
-      Some(amount) => *amount,
-      None => {
-        let amount = $vndb.get().stats().await?.producers;
-        let _ = $cache.set(amount);
-        amount
-      }
-    };
-
-    Ok(random_in!($vndb, 1..=amount, $find_fn))
-  }};
-}
-
-impl Vndb {
-  #[cfg(feature = "random")]
-  pub async fn random_character(self: &Arc<Self>) -> Result<CharacterQuery> {
-    random!(self, CHARACTER_AMOUNT, characters, find_character)
-  }
-
-  #[cfg(feature = "random")]
-  pub async fn random_character_in(self: &Arc<Self>, range: RangeInclusive<u32>) -> CharacterQuery {
-    random_in!(self, range, find_character)
-  }
-
-  #[cfg(feature = "random")]
-  pub async fn random_producer(self: &Arc<Self>) -> Result<ProducerQuery> {
-    random!(self, PRODUCER_AMOUNT, producers, find_producer)
-  }
-
-  #[cfg(feature = "random")]
-  pub async fn random_producer_in(self: &Arc<Self>, range: RangeInclusive<u32>) -> ProducerQuery {
-    random_in!(self, range, find_producer)
-  }
-
-  #[cfg(feature = "random")]
-  pub async fn random_release(self: &Arc<Self>) -> Result<ReleaseQuery> {
-    random!(self, RELEASE_AMOUNT, release, find_release)
-  }
-
-  #[cfg(feature = "random")]
-  pub async fn random_release_in(self: &Arc<Self>, range: RangeInclusive<u32>) -> ReleaseQuery {
-    random_in!(self, range, find_release)
-  }
-
-  #[cfg(feature = "random")]
-  pub async fn random_staff(self: &Arc<Self>) -> Result<StaffQuery> {
-    random!(self, STAFF_AMOUNT, staff, find_staff)
-  }
-
-  #[cfg(feature = "random")]
-  pub async fn random_staff_in(self: &Arc<Self>, range: RangeInclusive<u32>) -> StaffQuery {
-    random_in!(self, range, find_staff)
-  }
-
-  #[cfg(feature = "random")]
-  pub async fn random_tag(self: &Arc<Self>) -> Result<TagQuery> {
-    random!(self, TAG_AMOUNT, tag, find_tag)
-  }
-
-  #[cfg(feature = "random")]
-  pub async fn random_tag_in(self: &Arc<Self>, range: RangeInclusive<u32>) -> TagQuery {
-    random_in!(self, range, find_tag)
-  }
-
-  #[cfg(feature = "random")]
-  pub async fn random_trait(self: &Arc<Self>) -> Result<TraitQuery> {
-    random!(self, TRAIT_AMOUNT, r#trait, find_trait)
-  }
-
-  #[cfg(feature = "random")]
-  pub async fn random_trait_in(self: &Arc<Self>, range: RangeInclusive<u32>) -> TraitQuery {
-    random_in!(self, range, find_trait)
-  }
-}
-
 #[derive(Debug)]
 pub struct VndbBuilder {
   max_concurrent_requests: NonZeroU8,
@@ -357,8 +255,8 @@ impl Default for VndbBuilder {
 }
 
 /// See: <https://api.vndb.org/kana#user-authentication>
-#[derive(Debug)]
-pub struct Token(String);
+#[derive(Clone, Debug)]
+pub struct Token(Box<str>);
 
 impl Token {
   pub(crate) fn to_header(&self) -> String {
@@ -368,7 +266,7 @@ impl Token {
 
 impl<T: AsRef<str>> From<T> for Token {
   fn from(token: T) -> Self {
-    Self(token.as_ref().to_owned())
+    Self(Box::from(token.as_ref()))
   }
 }
 

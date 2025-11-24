@@ -1,0 +1,62 @@
+[package]
+name = "vn"
+version = "0.6.0"
+description = "VNDB for Rust"
+homepage = "https://github.com/ferreira-tb/vn"
+repository = "https://github.com/ferreira-tb/vn"
+authors = ["Andrew Ferreira <andrew.shien2@gmail.com>"]
+license = "MIT"
+edition = "2024"
+rust-version = "1.91"
+keywords = ["api", "http", "novel", "visual", "vndb"]
+
+[package.metadata.docs.rs]
+no-default-features = true
+features = ["random", "regex"]
+
+[lints]
+workspace = true
+
+[dependencies]
+bon = "3.8"
+futures = "0.3"
+http = "1.3"
+itertools = "0.14"
+remain = "0.2"
+serde_json = "1.0"
+thiserror = "2.0"
+url = "2.5"
+
+[dependencies.regex]
+version = "1.12"
+optional = true
+
+[dependencies.reqwest]
+version = "0.12"
+default-features = false
+features = ["json", "rustls-tls"]
+
+[dependencies.specta]
+version = "=2.0.0-rc.22"
+optional = true
+features = ["derive", "serde", "serde_json"]
+
+[dependencies.serde]
+version = "1.0"
+features = ["derive"]
+
+[dependencies.strum]
+version = "0.27"
+features = ["derive"]
+
+[dependencies.tokio]
+version = "1.48"
+default-features = false
+
+[dev-dependencies.tokio]
+version = "1.48"
+features = ["macros", "test-util"]
+
+[features]
+regex = ["dep:regex"]
+specta = ["dep:specta"]

@@ -53,8 +53,8 @@ macro_rules! impl_id_newtype_regex {
       }
 
       #[cfg(feature = "regex")]
-      pub fn parse(s: impl AsRef<str>) -> $crate::error::Result<Self> {
-        let id = Self(s.as_ref().to_owned());
+      pub fn parse(value: impl AsRef<str>) -> $crate::error::Result<Self> {
+        let id = Self(value.as_ref().to_owned());
         id.validate().map(|()| id)
       }
 
@@ -74,7 +74,10 @@ macro_rules! impl_id_newtype_regex {
 #[macro_export]
 macro_rules! impl_id_newtype_from_numeric {
   ($prefix:expr, $target:ident) => {
+    $crate::impl_id_newtype_from_numeric!(@ $prefix, i8 => $target);
+    $crate::impl_id_newtype_from_numeric!(@ $prefix, i16 => $target);
     $crate::impl_id_newtype_from_numeric!(@ $prefix, i32 => $target);
+    $crate::impl_id_newtype_from_numeric!(@ $prefix, i64 => $target);
     $crate::impl_id_newtype_from_numeric!(@ $prefix, u8 => $target);
     $crate::impl_id_newtype_from_numeric!(@ $prefix, u16 => $target);
     $crate::impl_id_newtype_from_numeric!(@ $prefix, u32 => $target);
