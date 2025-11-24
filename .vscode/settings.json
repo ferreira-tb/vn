@@ -1,8 +1,5 @@
 {
   "[rust]": {
     "editor.defaultFormatter": "rust-lang.rust-analyzer"
-  },
-  "rust-analyzer.cargo.features": [
-    "regex"
-  ]
+  }
 }

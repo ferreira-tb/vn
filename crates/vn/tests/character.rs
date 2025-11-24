@@ -1,5 +1,11 @@
 use vn::CharacterField::{
-  Description, ImageUrl, Name, Original, VisualNovelAliases, VisualNovelAltTitle, VisualNovelTitle,
+  Description,
+  ImageUrl,
+  Name,
+  Original,
+  VisualNovelAliases,
+  VisualNovelAltTitle,
+  VisualNovelTitle,
 };
 use vn::{CharacterId, Vndb};
 

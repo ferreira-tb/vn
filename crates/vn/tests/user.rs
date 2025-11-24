@@ -47,13 +47,29 @@ async fn get_user_range() {
     .unwrap();
 
   assert_eq!(users.len(), 11);
-  assert!(users.get("u700").unwrap().lengthvotes.is_some());
-  assert!(users.get("u710").unwrap().lengthvotes.is_some());
+  assert!(
+    users
+      .get("u700")
+      .unwrap()
+      .lengthvotes
+      .is_some()
+  );
+  assert!(
+    users
+      .get("u710")
+      .unwrap()
+      .lengthvotes
+      .is_some()
+  );
 }
 
 #[tokio::test]
 async fn find_user() {
-  let user = Vndb::new().find_user(500).await.unwrap().unwrap();
+  let user = Vndb::new()
+    .find_user(500)
+    .await
+    .unwrap()
+    .unwrap();
 
   assert_eq!(user.id, UserId::from(500));
   assert!(user.lengthvotes.is_some());

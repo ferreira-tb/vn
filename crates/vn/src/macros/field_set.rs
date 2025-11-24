@@ -27,7 +27,10 @@ macro_rules! impl_into_field_set {
     impl From<&[$target]> for $crate::http::FieldSet<$target> {
       fn from(fields: &[$target]) -> Self {
         let mut set = Self::with_capacity(fields.len());
-        fields.iter().for_each(|field| set.insert(field));
+        fields
+          .iter()
+          .for_each(|field| set.insert(field));
+
         set
       }
     }

@@ -13,7 +13,13 @@ use tokio::time::Duration;
 
 pub mod prelude {
   pub use super::{
-    CharacterQuery, Post, ProducerQuery, ReleaseQuery, StaffQuery, TagQuery, TraitQuery,
+    CharacterQuery,
+    Post,
+    ProducerQuery,
+    ReleaseQuery,
+    StaffQuery,
+    TagQuery,
+    TraitQuery,
     VisualNovelQuery,
   };
 }

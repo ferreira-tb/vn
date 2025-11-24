@@ -1,14 +1,17 @@
 use super::release::ExternalLink;
 use super::schema::Language;
 use super::{QueryField, SortQueryBy};
-use crate::{impl_id_newtype, impl_id_newtype_from_numeric, impl_into_field_set};
+use crate::{
+  impl_id_newtype,
+  impl_id_newtype_from_numeric,
+  impl_id_newtype_regex,
+  impl_into_field_set,
+};
+use regex::Regex;
 use serde::{Deserialize, Serialize};
+use std::sync::LazyLock;
 use strum::{Display, EnumIs, VariantArray};
 
-#[cfg(feature = "regex")]
-use {crate::impl_id_newtype_regex, regex::Regex, std::sync::LazyLock};
-
-#[cfg(feature = "regex")]
 static ID_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^s\d+$").unwrap());
 
 #[remain::sorted]
@@ -42,10 +45,8 @@ impl StaffId {
 }
 
 impl_id_newtype!(StaffId);
-impl_id_newtype_from_numeric!(StaffId::PREFIX, StaffId);
-
-#[cfg(feature = "regex")]
 impl_id_newtype_regex!(StaffId, ID_REGEX);
+impl_id_newtype_from_numeric!(StaffId::PREFIX, StaffId);
 
 #[remain::sorted]
 #[derive(Clone, Debug, Deserialize, Serialize)]

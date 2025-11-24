@@ -1,13 +1,16 @@
 use super::schema::Language;
 use super::{QueryField, SortQueryBy};
-use crate::{impl_id_newtype, impl_id_newtype_from_numeric, impl_into_field_set};
+use crate::{
+  impl_id_newtype,
+  impl_id_newtype_from_numeric,
+  impl_id_newtype_regex,
+  impl_into_field_set,
+};
+use regex::Regex;
 use serde::{Deserialize, Serialize};
+use std::sync::LazyLock;
 use strum::{Display, EnumIs, VariantArray};
 
-#[cfg(feature = "regex")]
-use {crate::impl_id_newtype_regex, regex::Regex, std::sync::LazyLock};
-
-#[cfg(feature = "regex")]
 static ID_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^p\d+$").unwrap());
 
 #[remain::sorted]
@@ -38,10 +41,8 @@ impl ProducerId {
 }
 
 impl_id_newtype!(ProducerId);
-impl_id_newtype_from_numeric!(ProducerId::PREFIX, ProducerId);
-
-#[cfg(feature = "regex")]
 impl_id_newtype_regex!(ProducerId, ID_REGEX);
+impl_id_newtype_from_numeric!(ProducerId::PREFIX, ProducerId);
 
 #[non_exhaustive]
 #[remain::sorted]

@@ -38,9 +38,11 @@ impl<T: QueryField> FieldSet<T> {
   where
     I: IntoIterator<Item = T>,
   {
-    self
-      .inner
-      .extend(iter.into_iter().map(|field| field.to_string()));
+    self.inner.extend(
+      iter
+        .into_iter()
+        .map(|field| field.to_string()),
+    );
   }
 
   pub fn extend_raw<I>(&mut self, iter: I)

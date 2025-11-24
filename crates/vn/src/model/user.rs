@@ -1,19 +1,22 @@
 use super::QueryField;
 use crate::http::UrlQueryParams;
 use crate::{
-  impl_id_newtype, impl_id_newtype_from_numeric, impl_into_field_set, impl_string_set,
-  impl_string_set_from_newtype, impl_string_set_from_numeric,
+  impl_id_newtype,
+  impl_id_newtype_from_numeric,
+  impl_id_newtype_regex,
+  impl_into_field_set,
+  impl_string_set,
+  impl_string_set_from_newtype,
+  impl_string_set_from_numeric,
 };
+use regex::Regex;
 use serde::{Deserialize, Deserializer, Serialize};
 use std::collections::{HashMap, HashSet};
 use std::ops::{Deref, DerefMut};
 use std::result::Result as StdResult;
+use std::sync::LazyLock;
 use strum::{Display, VariantArray};
 
-#[cfg(feature = "regex")]
-use {crate::impl_id_newtype_regex, regex::Regex, std::sync::LazyLock};
-
-#[cfg(feature = "regex")]
 static ID_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^u\d+$").unwrap());
 
 #[remain::sorted]
@@ -41,10 +44,8 @@ impl UserId {
 }
 
 impl_id_newtype!(UserId);
-impl_id_newtype_from_numeric!(UserId::PREFIX, UserId);
-
-#[cfg(feature = "regex")]
 impl_id_newtype_regex!(UserId, ID_REGEX);
+impl_id_newtype_from_numeric!(UserId::PREFIX, UserId);
 
 #[derive(Clone, Debug, Default, Serialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]

@@ -1,12 +1,15 @@
 use super::{QueryField, SortQueryBy};
-use crate::{impl_id_newtype, impl_id_newtype_from_numeric, impl_into_field_set};
+use crate::{
+  impl_id_newtype,
+  impl_id_newtype_from_numeric,
+  impl_id_newtype_regex,
+  impl_into_field_set,
+};
+use regex::Regex;
 use serde::{Deserialize, Serialize};
+use std::sync::LazyLock;
 use strum::{Display, EnumIs, VariantArray};
 
-#[cfg(feature = "regex")]
-use {crate::impl_id_newtype_regex, regex::Regex, std::sync::LazyLock};
-
-#[cfg(feature = "regex")]
 static ID_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^g\d+$").unwrap());
 
 #[remain::sorted]
@@ -38,10 +41,8 @@ impl TagId {
 }
 
 impl_id_newtype!(TagId);
-impl_id_newtype_from_numeric!(TagId::PREFIX, TagId);
-
-#[cfg(feature = "regex")]
 impl_id_newtype_regex!(TagId, ID_REGEX);
+impl_id_newtype_from_numeric!(TagId::PREFIX, TagId);
 
 #[non_exhaustive]
 #[remain::sorted]

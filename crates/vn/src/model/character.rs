@@ -2,15 +2,18 @@ use super::release::Release;
 use super::r#trait::Trait;
 use super::visual_novel::VisualNovel;
 use super::{QueryField, SortQueryBy};
-use crate::{impl_id_newtype, impl_id_newtype_from_numeric, impl_into_field_set};
+use crate::{
+  impl_id_newtype,
+  impl_id_newtype_from_numeric,
+  impl_id_newtype_regex,
+  impl_into_field_set,
+};
+use regex::Regex;
 use serde::{Deserialize, Deserializer, Serialize};
 use std::result::Result as StdResult;
+use std::sync::LazyLock;
 use strum::{Display, EnumIs, VariantArray};
 
-#[cfg(feature = "regex")]
-use {crate::impl_id_newtype_regex, regex::Regex, std::sync::LazyLock};
-
-#[cfg(feature = "regex")]
 static ID_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^c\d+$").unwrap());
 
 #[remain::sorted]
@@ -52,10 +55,8 @@ impl CharacterId {
 }
 
 impl_id_newtype!(CharacterId);
-impl_id_newtype_from_numeric!(CharacterId::PREFIX, CharacterId);
-
-#[cfg(feature = "regex")]
 impl_id_newtype_regex!(CharacterId, ID_REGEX);
+impl_id_newtype_from_numeric!(CharacterId::PREFIX, CharacterId);
 
 #[remain::sorted]
 #[derive(Clone, Debug, Serialize)]
