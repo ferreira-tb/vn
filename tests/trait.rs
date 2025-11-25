@@ -39,7 +39,6 @@ async fn find_trait() {
     .send()
     .await
     .unwrap()
-    .results
     .swap_remove(0);
 
   assert_eq!(r#trait.id, TraitId::from(AIRHEAD_ID));
@@ -55,7 +54,6 @@ async fn search_trait() {
     .send()
     .await
     .unwrap()
-    .results
     .swap_remove(0);
 
   assert_eq!(r#trait.id, TraitId::from(AIRHEAD_ID));

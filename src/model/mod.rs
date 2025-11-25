@@ -14,33 +14,14 @@ pub mod prelude {
   pub use super::Response;
   pub use super::auth_info::{AuthInfo, TokenPermission};
   pub use super::character::{
-    Character,
-    CharacterBirthday,
-    CharacterField,
-    CharacterId,
-    CharacterImage,
-    CharacterSex,
-    CharacterSexValue,
-    CharacterTrait,
-    CharacterVisualNovel,
-    SortCharacterBy,
+    Character, CharacterBirthday, CharacterField, CharacterId, CharacterImage, CharacterSex,
+    CharacterSexValue, CharacterTrait, CharacterVisualNovel, SortCharacterBy,
   };
   pub use super::producer::{Producer, ProducerField, ProducerId, ProducerType, SortProducerBy};
   pub use super::release::{
-    ExternalLink,
-    Release,
-    ReleaseField,
-    ReleaseId,
-    ReleaseImage,
-    ReleaseImageType,
-    ReleaseLanguage,
-    ReleaseMedia,
-    ReleaseProducer,
-    ReleaseResolution,
-    ReleaseType,
-    ReleaseVisualNovel,
-    ReleaseVoiced,
-    SortReleaseBy,
+    ExternalLink, Release, ReleaseField, ReleaseId, ReleaseImage, ReleaseImageType,
+    ReleaseLanguage, ReleaseMedia, ReleaseProducer, ReleaseResolution, ReleaseType,
+    ReleaseVisualNovel, ReleaseVoiced, SortReleaseBy,
   };
   pub use super::schema::{Language, Schema};
   pub use super::staff::{SortStaffBy, Staff, StaffAlias, StaffField, StaffGender, StaffId};
@@ -49,20 +30,9 @@ pub mod prelude {
   pub use super::r#trait::{SortTraitBy, Trait, TraitField, TraitId};
   pub use super::user::{User, UserField, UserId, UserUrlQuery, Users};
   pub use super::visual_novel::{
-    SortVisualNovelBy,
-    VisualNovel,
-    VisualNovelDevStatus,
-    VisualNovelDeveloper,
-    VisualNovelEdition,
-    VisualNovelField,
-    VisualNovelId,
-    VisualNovelImage,
-    VisualNovelLength,
-    VisualNovelRelation,
-    VisualNovelScreenShot,
-    VisualNovelStaff,
-    VisualNovelTag,
-    VisualNovelTitle,
+    SortVisualNovelBy, VisualNovel, VisualNovelDevStatus, VisualNovelDeveloper, VisualNovelEdition,
+    VisualNovelField, VisualNovelId, VisualNovelImage, VisualNovelLength, VisualNovelRelation,
+    VisualNovelScreenShot, VisualNovelStaff, VisualNovelTag, VisualNovelTitle,
     VisualNovelVoiceActor,
   };
 }
@@ -80,6 +50,51 @@ pub struct Response<T> {
   pub more: bool,
   pub normalized_filters: Option<JsonValue>,
   pub results: Vec<T>,
+}
+
+impl<T> Response<T> {
+  pub fn get(&self, index: usize) -> Option<&T> {
+    self.results.get(index)
+  }
+
+  pub fn first(&self) -> Option<&T> {
+    self.results.first()
+  }
+
+  pub fn last(&self) -> Option<&T> {
+    self.results.last()
+  }
+
+  pub fn remove(&mut self, index: usize) -> T {
+    self.results.remove(index)
+  }
+
+  pub fn swap_remove(&mut self, index: usize) -> T {
+    self.results.swap_remove(index)
+  }
+
+  #[inline]
+  pub fn is_empty(&self) -> bool {
+    self.results.is_empty()
+  }
+
+  #[inline]
+  pub fn len(&self) -> usize {
+    self.results.len()
+  }
+
+  pub fn iter(&self) -> impl Iterator<Item = &T> {
+    self.results.iter()
+  }
+}
+
+impl<T> IntoIterator for Response<T> {
+  type Item = T;
+  type IntoIter = std::vec::IntoIter<Self::Item>;
+
+  fn into_iter(self) -> Self::IntoIter {
+    self.results.into_iter()
+  }
 }
 
 pub trait QueryField: fmt::Display + sealed::Sealed {}

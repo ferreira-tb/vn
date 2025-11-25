@@ -1,16 +1,12 @@
 use super::QueryField;
 use crate::http::UrlQueryParams;
 use crate::{
-  impl_id_newtype,
-  impl_id_newtype_from_numeric,
-  impl_id_newtype_regex,
-  impl_into_field_set,
-  impl_string_set,
-  impl_string_set_from_newtype,
-  impl_string_set_from_numeric,
+  impl_id_newtype_from_numeric, impl_id_newtype_regex, impl_into_field_set, impl_string_set,
+  impl_string_set_from_newtype, impl_string_set_from_numeric,
 };
 use regex::Regex;
 use serde::{Deserialize, Deserializer, Serialize};
+use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 use std::ops::{Deref, DerefMut};
 use std::result::Result as StdResult;
@@ -35,15 +31,27 @@ impl From<User> for UserId {
   }
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash)]
+#[derive(
+  Clone,
+  Debug,
+  Deserialize,
+  Serialize,
+  PartialEq,
+  Eq,
+  Hash,
+  derive_more::Deref,
+  derive_more::Display,
+  derive_more::From,
+  derive_more::Into,
+)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
+#[from(&str, &String, String, Cow<'_, str>, Box<str>)]
 pub struct UserId(String);
 
 impl UserId {
   pub const PREFIX: &'static str = "u";
 }
 
-impl_id_newtype!(UserId);
 impl_id_newtype_regex!(UserId, ID_REGEX);
 impl_id_newtype_from_numeric!(UserId::PREFIX, UserId);
 

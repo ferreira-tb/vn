@@ -1,14 +1,10 @@
 use super::release::ExternalLink;
 use super::schema::Language;
 use super::{QueryField, SortQueryBy};
-use crate::{
-  impl_id_newtype,
-  impl_id_newtype_from_numeric,
-  impl_id_newtype_regex,
-  impl_into_field_set,
-};
+use crate::{impl_id_newtype_from_numeric, impl_id_newtype_regex, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
+use std::borrow::Cow;
 use std::sync::LazyLock;
 use strum::{Display, EnumIs, VariantArray};
 
@@ -36,15 +32,27 @@ impl From<Staff> for StaffId {
   }
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash)]
+#[derive(
+  Clone,
+  Debug,
+  Deserialize,
+  Serialize,
+  PartialEq,
+  Eq,
+  Hash,
+  derive_more::Deref,
+  derive_more::Display,
+  derive_more::From,
+  derive_more::Into,
+)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
+#[from(&str, &String, String, Cow<'_, str>, Box<str>)]
 pub struct StaffId(String);
 
 impl StaffId {
   pub const PREFIX: &'static str = "s";
 }
 
-impl_id_newtype!(StaffId);
 impl_id_newtype_regex!(StaffId, ID_REGEX);
 impl_id_newtype_from_numeric!(StaffId::PREFIX, StaffId);
 

@@ -20,7 +20,6 @@ async fn get_visual_novel() {
     .unwrap();
 
   let visual_novel = visual_novel
-    .results
     .iter()
     .find(|it| {
       it.title
@@ -54,7 +53,6 @@ async fn find_visual_novel() {
     .send()
     .await
     .unwrap()
-    .results
     .swap_remove(0);
 
   assert_eq!(visual_novel.id, VisualNovelId::from(NOVEL_ID));
@@ -69,7 +67,6 @@ async fn search_visual_novel() {
     .send()
     .await
     .unwrap()
-    .results
     .swap_remove(0);
 
   assert_eq!(visual_novel.id, VisualNovelId::from(NOVEL_ID));

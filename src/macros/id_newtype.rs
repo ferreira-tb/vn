@@ -1,49 +1,5 @@
 #[doc(hidden)]
 #[macro_export]
-macro_rules! impl_id_newtype {
-  ($target:ident) => {
-    impl $target {
-      pub fn into_inner(self) -> String {
-        self.0
-      }
-    }
-
-    impl From<&str> for $target {
-      fn from(id: &str) -> Self {
-        Self(id.to_owned())
-      }
-    }
-
-    impl From<String> for $target {
-      fn from(id: String) -> Self {
-        Self(id)
-      }
-    }
-
-    impl From<&String> for $target {
-      fn from(id: &String) -> Self {
-        Self(id.to_owned())
-      }
-    }
-
-    impl From<std::borrow::Cow<'_, str>> for $target {
-      fn from(id: std::borrow::Cow<'_, str>) -> Self {
-        Self(id.into_owned())
-      }
-    }
-
-    impl std::ops::Deref for $target {
-      type Target = str;
-
-      fn deref(&self) -> &Self::Target {
-        &self.0
-      }
-    }
-  };
-}
-
-#[doc(hidden)]
-#[macro_export]
 macro_rules! impl_id_newtype_regex {
   ($target:ident, $regex:expr) => {
     impl $target {

@@ -2,15 +2,11 @@ use super::producer::Producer;
 use super::schema::Language;
 use super::visual_novel::{VisualNovel, VisualNovelId, VisualNovelImage};
 use super::{QueryField, SortQueryBy};
-use crate::{
-  impl_id_newtype,
-  impl_id_newtype_from_numeric,
-  impl_id_newtype_regex,
-  impl_into_field_set,
-};
+use crate::{impl_id_newtype_from_numeric, impl_id_newtype_regex, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::Value as JsonValue;
+use std::borrow::Cow;
 use std::sync::LazyLock;
 use strum::{Display, EnumIs, VariantArray};
 
@@ -48,15 +44,27 @@ impl From<Release> for ReleaseId {
   }
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash)]
+#[derive(
+  Clone,
+  Debug,
+  Deserialize,
+  Serialize,
+  PartialEq,
+  Eq,
+  Hash,
+  derive_more::Deref,
+  derive_more::Display,
+  derive_more::From,
+  derive_more::Into,
+)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
+#[from(&str, &String, String, Cow<'_, str>, Box<str>)]
 pub struct ReleaseId(String);
 
 impl ReleaseId {
   pub const PREFIX: &'static str = "r";
 }
 
-impl_id_newtype!(ReleaseId);
 impl_id_newtype_regex!(ReleaseId, ID_REGEX);
 impl_id_newtype_from_numeric!(ReleaseId::PREFIX, ReleaseId);
 

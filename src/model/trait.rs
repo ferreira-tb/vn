@@ -1,12 +1,8 @@
 use super::{QueryField, SortQueryBy};
-use crate::{
-  impl_id_newtype,
-  impl_id_newtype_from_numeric,
-  impl_id_newtype_regex,
-  impl_into_field_set,
-};
+use crate::{impl_id_newtype_from_numeric, impl_id_newtype_regex, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
+use std::borrow::Cow;
 use std::sync::LazyLock;
 use strum::{Display, VariantArray};
 
@@ -33,15 +29,27 @@ impl From<Trait> for TraitId {
   }
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash)]
+#[derive(
+  Clone,
+  Debug,
+  Deserialize,
+  Serialize,
+  PartialEq,
+  Eq,
+  Hash,
+  derive_more::Deref,
+  derive_more::Display,
+  derive_more::From,
+  derive_more::Into,
+)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
+#[from(&str, &String, String, Cow<'_, str>, Box<str>)]
 pub struct TraitId(String);
 
 impl TraitId {
   pub const PREFIX: &'static str = "i";
 }
 
-impl_id_newtype!(TraitId);
 impl_id_newtype_regex!(TraitId, ID_REGEX);
 impl_id_newtype_from_numeric!(TraitId::PREFIX, TraitId);
 

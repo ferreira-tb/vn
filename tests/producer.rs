@@ -40,7 +40,6 @@ async fn find_producer() {
     .send()
     .await
     .unwrap()
-    .results
     .swap_remove(0);
 
   assert_eq!(producer.id, ProducerId::from(TRIANGLE_ID));
@@ -56,7 +55,6 @@ async fn search_producer() {
     .send()
     .await
     .unwrap()
-    .results
     .swap_remove(0);
 
   assert_eq!(producer.id, ProducerId::from(TRIANGLE_ID));

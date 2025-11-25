@@ -1,11 +1,5 @@
 use vn::CharacterField::{
-  Description,
-  ImageUrl,
-  Name,
-  Original,
-  VisualNovelAliases,
-  VisualNovelAltTitle,
-  VisualNovelTitle,
+  Description, ImageUrl, Name, Original, VisualNovelAliases, VisualNovelAltTitle, VisualNovelTitle,
 };
 use vn::{CharacterId, Vndb};
 
@@ -36,7 +30,6 @@ async fn get_character() {
     .unwrap();
 
   let character = character
-    .results
     .iter()
     .find(|it| {
       it.name
@@ -60,7 +53,6 @@ async fn find_character() {
     .send()
     .await
     .unwrap()
-    .results
     .swap_remove(0);
 
   assert_eq!(character.id, CharacterId::from(YUKARI_ID));
@@ -76,7 +68,6 @@ async fn search_character() {
     .send()
     .await
     .unwrap()
-    .results
     .into_iter()
     .find(|it| it.id == CharacterId::from(YUKARI_ID))
     .unwrap();

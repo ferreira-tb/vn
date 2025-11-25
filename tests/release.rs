@@ -42,7 +42,6 @@ async fn find_release() {
     .send()
     .await
     .unwrap()
-    .results
     .swap_remove(0);
 
   assert_eq!(release.id, ReleaseId::from(KUSARIHIME_ID));

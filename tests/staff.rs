@@ -42,7 +42,6 @@ async fn find_staff() {
     .send()
     .await
     .unwrap()
-    .results
     .swap_remove(0);
 
   assert_eq!(staff.id, StaffId::from(SUMIRE_ID));
@@ -58,7 +57,6 @@ async fn search_staff() {
     .send()
     .await
     .unwrap()
-    .results
     .swap_remove(0);
 
   assert_eq!(staff.id, StaffId::from(SUMIRE_ID));

@@ -38,7 +38,6 @@ async fn find_tag() {
     .send()
     .await
     .unwrap()
-    .results
     .swap_remove(0);
 
   assert_eq!(tag.id, TagId::from(FANTASY_ID));
@@ -54,7 +53,6 @@ async fn search_tag() {
     .send()
     .await
     .unwrap()
-    .results
     .swap_remove(0);
 
   assert_eq!(tag.id, TagId::from(FANTASY_ID));
