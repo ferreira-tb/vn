@@ -1,6 +1,6 @@
 [package]
 name = "vn"
-version = "0.6.5"
+version = "0.7.0"
 description = "VNDB for Rust"
 homepage = "https://github.com/ferreira-tb/vn"
 repository = "https://github.com/ferreira-tb/vn"
@@ -30,9 +30,9 @@ version = "2.1"
 features = ["deref", "display", "from", "into"]
 
 [dependencies.reqwest]
-version = "0.13"
+version = "0.12"
 default-features = false
-features = ["json", "rustls"]
+features = ["json", "rustls-tls"]
 
 [dependencies.specta]
 version = "=2.0.0-rc.22"
