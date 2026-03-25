@@ -7,7 +7,7 @@ repository = "https://github.com/ferreira-tb/vn"
 authors = ["Andrew Ferreira <andrew.shien2@gmail.com>"]
 license = "MIT"
 edition = "2024"
-rust-version = "1.91"
+rust-version = "1.94"
 readme = "./README.md"
 keywords = ["api", "http", "novel", "visual", "vndb"]
 
@@ -48,11 +48,11 @@ version = "0.28"
 features = ["derive"]
 
 [dependencies.tokio]
-version = "1.49"
+version = "1.50"
 default-features = false
 
 [dev-dependencies.tokio]
-version = "1.49"
+version = "1.50"
 features = ["macros", "test-util"]
 
 [features]
