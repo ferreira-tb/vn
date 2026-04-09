@@ -5,7 +5,6 @@ use super::{QueryField, SortQueryBy};
 use crate::{impl_id_newtype_from_numeric, impl_id_newtype_regex, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Deserializer, Serialize};
-use std::borrow::Cow;
 use std::result::Result as StdResult;
 use std::sync::LazyLock;
 use strum::{Display, EnumIs, VariantArray};
@@ -55,8 +54,8 @@ impl From<Character> for CharacterId {
   derive_more::From,
   derive_more::Into,
 )]
+#[from(&str, &String, String, Box<str>)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-#[from(&str, &String, String, Cow<'_, str>, Box<str>)]
 pub struct CharacterId(String);
 
 impl CharacterId {

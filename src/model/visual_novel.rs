@@ -7,7 +7,6 @@ use super::{QueryField, SortQueryBy};
 use crate::{impl_id_newtype_from_numeric, impl_id_newtype_regex, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Deserializer, Serialize};
-use std::borrow::Cow;
 use std::result::Result as StdResult;
 use std::sync::LazyLock;
 use strum::{Display, EnumIs, VariantArray};
@@ -66,7 +65,7 @@ impl From<VisualNovel> for VisualNovelId {
   derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-#[from(&str, &String, String, Cow<'_, str>, Box<str>)]
+#[from(&str, &String, String, Box<str>)]
 pub struct VisualNovelId(String);
 
 impl VisualNovelId {

@@ -6,7 +6,6 @@ use crate::{impl_id_newtype_from_numeric, impl_id_newtype_regex, impl_into_field
 use regex::Regex;
 use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::Value as JsonValue;
-use std::borrow::Cow;
 use std::sync::LazyLock;
 use strum::{Display, EnumIs, VariantArray};
 
@@ -58,7 +57,7 @@ impl From<Release> for ReleaseId {
   derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-#[from(&str, &String, String, Cow<'_, str>, Box<str>)]
+#[from(&str, &String, String, Box<str>)]
 pub struct ReleaseId(String);
 
 impl ReleaseId {

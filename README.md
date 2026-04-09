@@ -1,8 +1,7 @@
 # vn
 
-```toml
-[dependencies]
-vn = 0.6
+```sh
+cargo add vn
 ```
 
 ## Usage

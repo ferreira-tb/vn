@@ -6,7 +6,6 @@ use crate::{
 };
 use regex::Regex;
 use serde::{Deserialize, Deserializer, Serialize};
-use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 use std::ops::{Deref, DerefMut};
 use std::result::Result as StdResult;
@@ -45,7 +44,7 @@ impl From<User> for UserId {
   derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-#[from(&str, &String, String, Cow<'_, str>, Box<str>)]
+#[from(&str, &String, String,  Box<str>)]
 pub struct UserId(String);
 
 impl UserId {
