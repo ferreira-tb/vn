@@ -1,6 +1,6 @@
 [package]
 name = "vn"
-version = "0.7.1"
+version = "0.8.0"
 description = "VNDB for Rust"
 homepage = "https://github.com/ferreira-tb/vn"
 repository = "https://github.com/ferreira-tb/vn"
@@ -35,9 +35,9 @@ default-features = false
 features = ["json", "rustls-tls"]
 
 [dependencies.specta]
-version = "=2.0.0-rc.22"
+version = "=2.0.0-rc.24"
 optional = true
-features = ["derive", "serde", "serde_json"]
+features = ["derive", "serde_json"]
 
 [dependencies.serde]
 version = "1.0"
@@ -48,11 +48,11 @@ version = "0.28"
 features = ["derive"]
 
 [dependencies.tokio]
-version = "1.50"
+version = "1.51"
 default-features = false
 
 [dev-dependencies.tokio]
-version = "1.50"
+version = "1.51"
 features = ["macros", "test-util"]
 
 [features]
