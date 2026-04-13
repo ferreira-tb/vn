@@ -56,5 +56,33 @@ macro_rules! impl_id_newtype {
         Self::new(id).ok_or_else(|| $crate::error::Error::InvalidId(id.to_owned()))
       }
     }
+
+    #[cfg(feature = "diesel_sqlite")]
+    impl diesel::deserialize::FromSql<diesel::sql_types::Text, diesel::sqlite::Sqlite> for $target {
+      fn from_sql(
+        bytes: <diesel::sqlite::Sqlite as diesel::backend::Backend>::RawValue<'_>,
+      ) -> diesel::deserialize::Result<Self> {
+        let value = <String as diesel::deserialize::FromSql<
+          diesel::sql_types::Text,
+          diesel::sqlite::Sqlite,
+        >>::from_sql(bytes)?;
+
+        Ok(value.as_str().parse()?)
+      }
+    }
+
+    #[cfg(feature = "diesel_sqlite")]
+    impl diesel::serialize::ToSql<diesel::sql_types::Text, diesel::sqlite::Sqlite> for $target
+    where
+      String: diesel::serialize::ToSql<diesel::sql_types::Text, diesel::sqlite::Sqlite>,
+    {
+      fn to_sql<'b>(
+        &'b self,
+        out: &mut diesel::serialize::Output<'b, '_, diesel::sqlite::Sqlite>,
+      ) -> diesel::serialize::Result {
+        out.set_value(self.to_string());
+        Ok(diesel::serialize::IsNull::No)
+      }
+    }
   };
 }
