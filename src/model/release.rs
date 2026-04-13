@@ -2,7 +2,7 @@ use super::producer::Producer;
 use super::schema::Language;
 use super::visual_novel::{VisualNovel, VisualNovelId, VisualNovelImage};
 use super::{QueryField, SortQueryBy};
-use crate::{impl_id_newtype_from_numeric, impl_id_newtype_regex, impl_into_field_set};
+use crate::{impl_id_newtype, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::Value as JsonValue;
@@ -44,28 +44,16 @@ impl From<Release> for ReleaseId {
 }
 
 #[derive(
-  Clone,
-  Debug,
-  Deserialize,
-  Serialize,
-  PartialEq,
-  Eq,
-  Hash,
-  derive_more::Deref,
-  derive_more::Display,
-  derive_more::From,
-  derive_more::Into,
+  Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash, derive_more::Display, derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-#[from(&str, &String, String, Box<str>)]
-pub struct ReleaseId(String);
+pub struct ReleaseId(Box<str>);
 
 impl ReleaseId {
   pub const PREFIX: &'static str = "r";
 }
 
-impl_id_newtype_regex!(ReleaseId, ID_REGEX);
-impl_id_newtype_from_numeric!(ReleaseId::PREFIX, ReleaseId);
+impl_id_newtype!(ReleaseId, ID_REGEX);
 
 #[remain::sorted]
 #[derive(Clone, Debug, Deserialize, Serialize)]

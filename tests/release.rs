@@ -1,8 +1,13 @@
-use vn::ReleaseField::{AltTitle, Title};
+use std::sync::LazyLock;
+use vn::ReleaseField::*;
 use vn::{ReleaseId, Vndb};
 
 const KUSARIHIME: &str = "Kusarihime ~Euthanasia~ Download Edition";
-const KUSARIHIME_ID: u16 = 80;
+
+static KUSARIHIME_ID: LazyLock<ReleaseId> = LazyLock::new(|| {
+  let id = format!("{}{}", ReleaseId::PREFIX, 80);
+  ReleaseId::new(&id).unwrap()
+});
 
 #[tokio::test]
 async fn get_release() {
@@ -30,21 +35,22 @@ async fn get_release() {
     .unwrap();
 
   let title = release.title.as_deref().unwrap();
-  assert_eq!(release.id, ReleaseId::from(KUSARIHIME_ID));
+  assert_eq!(&release.id, &*KUSARIHIME_ID);
   assert!(title.eq_ignore_ascii_case(KUSARIHIME));
 }
 
 #[tokio::test]
 async fn find_release() {
   let release = Vndb::new()
-    .find_release(KUSARIHIME_ID)
+    .find_release(&*KUSARIHIME_ID)
     .fields([Title, AltTitle])
     .send()
     .await
     .unwrap()
-    .swap_remove(0);
+    .pop_front()
+    .unwrap();
 
-  assert_eq!(release.id, ReleaseId::from(KUSARIHIME_ID));
+  assert_eq!(&release.id, &*KUSARIHIME_ID);
   assert_eq!(release.title.as_deref(), Some(KUSARIHIME));
 }
 
@@ -68,6 +74,6 @@ async fn search_release() {
     })
     .unwrap();
 
-  assert_eq!(release.id, ReleaseId::from(KUSARIHIME_ID));
+  assert_eq!(&release.id, &*KUSARIHIME_ID);
   assert_eq!(release.title.as_deref(), Some(KUSARIHIME));
 }

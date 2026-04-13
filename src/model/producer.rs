@@ -1,6 +1,6 @@
 use super::schema::Language;
 use super::{QueryField, SortQueryBy};
-use crate::{impl_id_newtype_from_numeric, impl_id_newtype_regex, impl_into_field_set};
+use crate::{impl_id_newtype, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::sync::LazyLock;
@@ -28,28 +28,16 @@ impl From<Producer> for ProducerId {
 }
 
 #[derive(
-  Clone,
-  Debug,
-  Deserialize,
-  Serialize,
-  PartialEq,
-  Eq,
-  Hash,
-  derive_more::Deref,
-  derive_more::Display,
-  derive_more::From,
-  derive_more::Into,
+  Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash, derive_more::Display, derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-#[from(&str, &String, String, Box<str>)]
-pub struct ProducerId(String);
+pub struct ProducerId(Box<str>);
 
 impl ProducerId {
   pub const PREFIX: &'static str = "p";
 }
 
-impl_id_newtype_regex!(ProducerId, ID_REGEX);
-impl_id_newtype_from_numeric!(ProducerId::PREFIX, ProducerId);
+impl_id_newtype!(ProducerId, ID_REGEX);
 
 #[non_exhaustive]
 #[remain::sorted]

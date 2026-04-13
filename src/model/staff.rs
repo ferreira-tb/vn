@@ -1,7 +1,7 @@
 use super::release::ExternalLink;
 use super::schema::Language;
 use super::{QueryField, SortQueryBy};
-use crate::{impl_id_newtype_from_numeric, impl_id_newtype_regex, impl_into_field_set};
+use crate::{impl_id_newtype, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::sync::LazyLock;
@@ -32,28 +32,16 @@ impl From<Staff> for StaffId {
 }
 
 #[derive(
-  Clone,
-  Debug,
-  Deserialize,
-  Serialize,
-  PartialEq,
-  Eq,
-  Hash,
-  derive_more::Deref,
-  derive_more::Display,
-  derive_more::From,
-  derive_more::Into,
+  Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash, derive_more::Display, derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-#[from(&str, &String, String, Box<str>)]
-pub struct StaffId(String);
+pub struct StaffId(Box<str>);
 
 impl StaffId {
   pub const PREFIX: &'static str = "s";
 }
 
-impl_id_newtype_regex!(StaffId, ID_REGEX);
-impl_id_newtype_from_numeric!(StaffId::PREFIX, StaffId);
+impl_id_newtype!(StaffId, ID_REGEX);
 
 #[remain::sorted]
 #[derive(Clone, Debug, Deserialize, Serialize)]

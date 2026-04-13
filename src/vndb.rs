@@ -82,59 +82,31 @@ macro_rules! search {
 }
 
 impl Vndb {
-  pub fn find_character<Id>(self: &Arc<Self>, id: Id) -> CharacterQuery
-  where
-    Id: Into<CharacterId>,
-  {
-    let id: CharacterId = id.into();
+  pub fn find_character(self: &Arc<Self>, id: &CharacterId) -> CharacterQuery {
     find!(self, id, character, CharacterField)
   }
 
-  pub fn find_producer<Id>(self: &Arc<Self>, id: Id) -> ProducerQuery
-  where
-    Id: Into<ProducerId>,
-  {
-    let id: ProducerId = id.into();
+  pub fn find_producer(self: &Arc<Self>, id: &ProducerId) -> ProducerQuery {
     find!(self, id, producer, ProducerField)
   }
 
-  pub fn find_release<Id>(self: &Arc<Self>, id: Id) -> ReleaseQuery
-  where
-    Id: Into<ReleaseId>,
-  {
-    let id: ReleaseId = id.into();
+  pub fn find_release(self: &Arc<Self>, id: &ReleaseId) -> ReleaseQuery {
     find!(self, id, release, ReleaseField)
   }
 
-  pub fn find_staff<Id>(self: &Arc<Self>, id: Id) -> StaffQuery
-  where
-    Id: Into<StaffId>,
-  {
-    let id: StaffId = id.into();
+  pub fn find_staff(self: &Arc<Self>, id: &StaffId) -> StaffQuery {
     find!(self, id, staff, StaffField)
   }
 
-  pub fn find_tag<Id>(self: &Arc<Self>, id: Id) -> TagQuery
-  where
-    Id: Into<TagId>,
-  {
-    let id: TagId = id.into();
+  pub fn find_tag(self: &Arc<Self>, id: &TagId) -> TagQuery {
     find!(self, id, tag, TagField)
   }
 
-  pub fn find_trait<Id>(self: &Arc<Self>, id: Id) -> TraitQuery
-  where
-    Id: Into<TraitId>,
-  {
-    let id: TraitId = id.into();
+  pub fn find_trait(self: &Arc<Self>, id: &TraitId) -> TraitQuery {
     find!(self, id, r#trait, TraitField)
   }
 
-  pub async fn find_user<Id>(self: &Arc<Self>, id: Id) -> Result<Option<User>>
-  where
-    Id: Into<UserId>,
-  {
-    let id: UserId = id.into();
+  pub async fn find_user(self: &Arc<Self>, id: &UserId) -> Result<Option<User>> {
     let user = self
       .get()
       .user(id, UserField::all())
@@ -146,11 +118,7 @@ impl Vndb {
     Ok(user)
   }
 
-  pub fn find_visual_novel<Id>(self: &Arc<Self>, id: Id) -> VisualNovelQuery
-  where
-    Id: Into<VisualNovelId>,
-  {
-    let id: VisualNovelId = id.into();
+  pub fn find_visual_novel(self: &Arc<Self>, id: &VisualNovelId) -> VisualNovelQuery {
     find!(self, id, visual_novel, VisualNovelField)
   }
 
