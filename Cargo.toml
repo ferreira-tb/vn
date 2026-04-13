@@ -29,6 +29,11 @@ url = "2.5"
 version = "2.1"
 features = ["display", "into"]
 
+[dependencies.diesel]
+version = "2.3"
+default-features = false
+optional = true
+
 [dependencies.reqwest]
 version = "0.12"
 default-features = false
@@ -56,8 +61,9 @@ version = "1.51"
 features = ["macros", "test-util"]
 
 [features]
-default = ["specta"]
+default = []
 specta = ["dep:specta"]
+diesel_sqlite = ["dep:diesel", "diesel/sqlite"]
 
 [lints.rust]
 async_fn_in_trait = "allow"
