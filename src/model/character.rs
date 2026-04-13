@@ -22,6 +22,7 @@ pub struct Character {
   pub bust: Option<u32>,
   pub cup: Option<String>,
   pub description: Option<String>,
+  pub gender: Option<CharacterGender>,
   pub height: Option<u32>,
   pub hips: Option<u32>,
   pub id: CharacterId,
@@ -69,6 +70,46 @@ impl<'de> Deserialize<'de> for CharacterBirthday {
     let date: [u32; 2] = Deserialize::deserialize(deserializer)?;
     Ok(Self { day: date[1], month: date[0] })
   }
+}
+
+#[remain::sorted]
+#[derive(Clone, Debug, Serialize)]
+#[cfg_attr(feature = "specta", derive(specta::Type))]
+pub struct CharacterGender {
+  pub apparent: Option<CharacterGenderValue>,
+  pub real: Option<CharacterGenderValue>,
+}
+
+impl<'de> Deserialize<'de> for CharacterGender {
+  fn deserialize<D>(deserializer: D) -> StdResult<Self, D::Error>
+  where
+    D: Deserializer<'de>,
+  {
+    type Value = Option<CharacterGenderValue>;
+    let array: [Value; 2] = Deserialize::deserialize(deserializer)?;
+    Ok(Self { apparent: array[0], real: array[1] })
+  }
+}
+
+#[remain::sorted]
+#[derive(Copy, Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash, Display, EnumIs)]
+#[cfg_attr(feature = "specta", derive(specta::Type))]
+pub enum CharacterGenderValue {
+  #[serde(rename = "a")]
+  #[strum(serialize = "a")]
+  Ambiguous,
+
+  #[serde(rename = "f")]
+  #[strum(serialize = "f")]
+  Female,
+
+  #[serde(rename = "m")]
+  #[strum(serialize = "m")]
+  Male,
+
+  #[serde(rename = "o")]
+  #[strum(serialize = "o")]
+  NonBinary,
 }
 
 #[remain::sorted]
