@@ -230,6 +230,10 @@ pub enum CharacterField {
   #[strum(serialize = "description")]
   Description,
 
+  #[serde(rename = "gender")]
+  #[strum(serialize = "gender")]
+  Gender,
+
   #[serde(rename = "height")]
   #[strum(serialize = "height")]
   Height,
