@@ -1,9 +1,14 @@
-use vn::TraitField::{GroupName, Name};
+use std::sync::LazyLock;
+use vn::TraitField::*;
 use vn::{TraitId, Vndb};
 
 const AIRHEAD: &str = "Airhead";
-const AIRHEAD_ID: u16 = 229;
 const AIRHEAD_GROUP: &str = "Personality";
+
+static AIRHEAD_ID: LazyLock<TraitId> = LazyLock::new(|| {
+  let id = format!("{}{}", TraitId::PREFIX, 229);
+  TraitId::new(&id).unwrap()
+});
 
 #[tokio::test]
 async fn get_trait() {
@@ -22,11 +27,11 @@ async fn get_trait() {
 
   assert_eq!(results.len(), 1);
 
-  let r#trait = results.swap_remove(0);
+  let r#trait = results.pop_front().unwrap();
   let name = r#trait.name.as_deref().unwrap();
   let group_name = r#trait.group_name.as_deref().unwrap();
 
-  assert_eq!(r#trait.id, TraitId::from(AIRHEAD_ID));
+  assert_eq!(&r#trait.id, &*AIRHEAD_ID);
   assert!(name.eq_ignore_ascii_case(AIRHEAD));
   assert!(group_name.eq_ignore_ascii_case(AIRHEAD_GROUP));
 }
@@ -34,14 +39,15 @@ async fn get_trait() {
 #[tokio::test]
 async fn find_trait() {
   let r#trait = Vndb::new()
-    .find_trait(AIRHEAD_ID)
+    .find_trait(&*AIRHEAD_ID)
     .fields([Name, GroupName])
     .send()
     .await
     .unwrap()
-    .swap_remove(0);
+    .pop_front()
+    .unwrap();
 
-  assert_eq!(r#trait.id, TraitId::from(AIRHEAD_ID));
+  assert_eq!(&r#trait.id, &*AIRHEAD_ID);
   assert_eq!(r#trait.name.as_deref(), Some(AIRHEAD));
   assert_eq!(r#trait.group_name.as_deref(), Some(AIRHEAD_GROUP));
 }
@@ -54,9 +60,10 @@ async fn search_trait() {
     .send()
     .await
     .unwrap()
-    .swap_remove(0);
+    .pop_front()
+    .unwrap();
 
-  assert_eq!(r#trait.id, TraitId::from(AIRHEAD_ID));
+  assert_eq!(&r#trait.id, &*AIRHEAD_ID);
   assert_eq!(r#trait.name.as_deref(), Some(AIRHEAD));
   assert_eq!(r#trait.group_name.as_deref(), Some(AIRHEAD_GROUP));
 }

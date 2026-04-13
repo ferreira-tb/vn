@@ -1,5 +1,5 @@
 use super::{QueryField, SortQueryBy};
-use crate::{impl_id_newtype_from_numeric, impl_id_newtype_regex, impl_into_field_set};
+use crate::{impl_id_newtype, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::sync::LazyLock;
@@ -28,28 +28,16 @@ impl From<Tag> for TagId {
 }
 
 #[derive(
-  Clone,
-  Debug,
-  Deserialize,
-  Serialize,
-  PartialEq,
-  Eq,
-  Hash,
-  derive_more::Deref,
-  derive_more::Display,
-  derive_more::From,
-  derive_more::Into,
+  Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash, derive_more::Display, derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-#[from(&str, &String, String, Box<str>)]
-pub struct TagId(String);
+pub struct TagId(Box<str>);
 
 impl TagId {
   pub const PREFIX: &'static str = "g";
 }
 
-impl_id_newtype_regex!(TagId, ID_REGEX);
-impl_id_newtype_from_numeric!(TagId::PREFIX, TagId);
+impl_id_newtype!(TagId, ID_REGEX);
 
 #[non_exhaustive]
 #[remain::sorted]

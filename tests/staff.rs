@@ -1,8 +1,13 @@
-use vn::StaffField::{Gender, IsMain, Lang, Name};
+use std::sync::LazyLock;
+use vn::StaffField::*;
 use vn::{Language, StaffGender, StaffId, Vndb};
 
 const SUMIRE: &str = "Uesaka Sumire";
-const SUMIRE_ID: u16 = 4466;
+
+static SUMIRE_ID: LazyLock<StaffId> = LazyLock::new(|| {
+  let id = format!("{}{}", StaffId::PREFIX, 4466);
+  StaffId::new(&id).unwrap()
+});
 
 #[tokio::test]
 async fn get_staff() {
@@ -28,7 +33,7 @@ async fn get_staff() {
   let lang = staff.lang.as_ref().unwrap();
   let gender = staff.gender.as_ref().unwrap();
 
-  assert_eq!(staff.id, StaffId::from(SUMIRE_ID));
+  assert_eq!(&staff.id, &*SUMIRE_ID);
   assert!(name.eq_ignore_ascii_case(SUMIRE));
   assert_eq!(lang, &Language::Japanese);
   assert_eq!(gender, &StaffGender::Female);
@@ -37,14 +42,15 @@ async fn get_staff() {
 #[tokio::test]
 async fn find_staff() {
   let staff = Vndb::new()
-    .find_staff(SUMIRE_ID)
+    .find_staff(&*SUMIRE_ID)
     .fields([Name, Lang, Gender, IsMain])
     .send()
     .await
     .unwrap()
-    .swap_remove(0);
+    .pop_front()
+    .unwrap();
 
-  assert_eq!(staff.id, StaffId::from(SUMIRE_ID));
+  assert_eq!(&staff.id, &*SUMIRE_ID);
   assert_eq!(staff.name.as_deref(), Some(SUMIRE));
   assert_eq!(staff.lang, Some(Language::Japanese));
 }
@@ -57,9 +63,10 @@ async fn search_staff() {
     .send()
     .await
     .unwrap()
-    .swap_remove(0);
+    .pop_front()
+    .unwrap();
 
-  assert_eq!(staff.id, StaffId::from(SUMIRE_ID));
+  assert_eq!(&staff.id, &*SUMIRE_ID);
   assert_eq!(staff.name.as_deref(), Some(SUMIRE));
   assert_eq!(staff.lang, Some(Language::Japanese));
 }

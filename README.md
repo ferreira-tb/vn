@@ -23,11 +23,12 @@ let vndb = Vndb::builder()
 Find a visual novel by its id:
 
 ```rust
-use vn::{Vndb, VisualNovelField};
+use vn::{Vndb, VisualNovelField, VisualNovelId};
 
 let vndb = Vndb::new();
+let id = VisualNovelId::new("v1194").unwrap();
 let results = vndb
-  .find_visual_novel(1194)
+  .find_visual_novel(&id)
   .fields(VisualNovelField::Title)
   .send()
   .await

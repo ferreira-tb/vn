@@ -1,5 +1,5 @@
 use super::{QueryField, SortQueryBy};
-use crate::{impl_id_newtype_from_numeric, impl_id_newtype_regex, impl_into_field_set};
+use crate::{impl_id_newtype, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::sync::LazyLock;
@@ -29,28 +29,16 @@ impl From<Trait> for TraitId {
 }
 
 #[derive(
-  Clone,
-  Debug,
-  Deserialize,
-  Serialize,
-  PartialEq,
-  Eq,
-  Hash,
-  derive_more::Deref,
-  derive_more::Display,
-  derive_more::From,
-  derive_more::Into,
+  Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash, derive_more::Display, derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-#[from(&str, &String, String, Box<str>)]
-pub struct TraitId(String);
+pub struct TraitId(Box<str>);
 
 impl TraitId {
   pub const PREFIX: &'static str = "i";
 }
 
-impl_id_newtype_regex!(TraitId, ID_REGEX);
-impl_id_newtype_from_numeric!(TraitId::PREFIX, TraitId);
+impl_id_newtype!(TraitId, ID_REGEX);
 
 #[non_exhaustive]
 #[remain::sorted]

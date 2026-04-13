@@ -1,4 +1,4 @@
-use vn::UserField::{self, LengthVotes};
+use vn::UserField::{self, *};
 use vn::{UserId, Vndb};
 
 #[tokio::test]
@@ -65,13 +65,14 @@ async fn get_user_range() {
 
 #[tokio::test]
 async fn find_user() {
+  let id = UserId::new("u500").unwrap();
   let user = Vndb::new()
-    .find_user(500)
+    .find_user(&id)
     .await
     .unwrap()
     .unwrap();
 
-  assert_eq!(user.id, UserId::from(500));
+  assert_eq!(user.id, id);
   assert!(user.lengthvotes.is_some());
   assert!(user.lengthvotes_sum.is_some());
 }

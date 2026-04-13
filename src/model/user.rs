@@ -1,8 +1,8 @@
 use super::QueryField;
 use crate::http::UrlQueryParams;
 use crate::{
-  impl_id_newtype_from_numeric, impl_id_newtype_regex, impl_into_field_set, impl_string_set,
-  impl_string_set_from_newtype, impl_string_set_from_numeric,
+  impl_id_newtype, impl_into_field_set, impl_string_set, impl_string_set_from_newtype,
+  impl_string_set_from_numeric,
 };
 use regex::Regex;
 use serde::{Deserialize, Deserializer, Serialize};
@@ -31,28 +31,16 @@ impl From<User> for UserId {
 }
 
 #[derive(
-  Clone,
-  Debug,
-  Deserialize,
-  Serialize,
-  PartialEq,
-  Eq,
-  Hash,
-  derive_more::Deref,
-  derive_more::Display,
-  derive_more::From,
-  derive_more::Into,
+  Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash, derive_more::Display, derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-#[from(&str, &String, String,  Box<str>)]
-pub struct UserId(String);
+pub struct UserId(Box<str>);
 
 impl UserId {
   pub const PREFIX: &'static str = "u";
 }
 
-impl_id_newtype_regex!(UserId, ID_REGEX);
-impl_id_newtype_from_numeric!(UserId::PREFIX, UserId);
+impl_id_newtype!(UserId, ID_REGEX);
 
 #[derive(Clone, Debug, Default, Serialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]

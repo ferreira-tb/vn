@@ -2,7 +2,7 @@ use super::release::Release;
 use super::r#trait::Trait;
 use super::visual_novel::VisualNovel;
 use super::{QueryField, SortQueryBy};
-use crate::{impl_id_newtype_from_numeric, impl_id_newtype_regex, impl_into_field_set};
+use crate::{impl_id_newtype, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Deserializer, Serialize};
 use std::result::Result as StdResult;
@@ -42,28 +42,16 @@ impl From<Character> for CharacterId {
 }
 
 #[derive(
-  Clone,
-  Debug,
-  Deserialize,
-  Serialize,
-  PartialEq,
-  Eq,
-  Hash,
-  derive_more::Deref,
-  derive_more::Display,
-  derive_more::From,
-  derive_more::Into,
+  Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash, derive_more::Display, derive_more::Into,
 )]
-#[from(&str, &String, String, Box<str>)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct CharacterId(String);
+pub struct CharacterId(Box<str>);
 
 impl CharacterId {
   pub const PREFIX: &'static str = "c";
 }
 
-impl_id_newtype_regex!(CharacterId, ID_REGEX);
-impl_id_newtype_from_numeric!(CharacterId::PREFIX, CharacterId);
+impl_id_newtype!(CharacterId, ID_REGEX);
 
 #[remain::sorted]
 #[derive(Clone, Debug, Serialize)]

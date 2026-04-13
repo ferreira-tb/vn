@@ -164,25 +164,35 @@ macro_rules! impl_string_set_from_newtype {
   ($target:ident, $inner:ident) => {
     impl From<$inner> for $target {
       fn from(id: $inner) -> Self {
-        Self::from(id.0)
+        Self::from(id.0.as_ref())
       }
     }
 
     impl From<&$inner> for $target {
       fn from(id: &$inner) -> Self {
-        Self::from(&id.0)
+        Self::from(id.0.as_ref())
       }
     }
 
     impl From<Vec<$inner>> for $target {
       fn from(ids: Vec<$inner>) -> Self {
-        Self(ids.into_iter().map(|id| id.0).collect())
+        Self(
+          ids
+            .into_iter()
+            .map(|id| id.0.to_string())
+            .collect(),
+        )
       }
     }
 
     impl From<&[$inner]> for $target {
       fn from(ids: &[$inner]) -> Self {
-        Self(ids.iter().map(|id| id.0.clone()).collect())
+        Self(
+          ids
+            .iter()
+            .map(|id| id.0.clone().to_string())
+            .collect(),
+        )
       }
     }
 

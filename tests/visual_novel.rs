@@ -1,9 +1,14 @@
-use vn::VisualNovelField::{Title, TitlesMain, TitlesTitle};
+use std::sync::LazyLock;
+use vn::VisualNovelField::*;
 use vn::{VisualNovelId, Vndb};
 
 const NOVEL: &str = "Yosuga no Sora";
 const NOVEL_JP: &str = "ヨスガノソラ";
-const NOVEL_ID: u16 = 1194;
+
+static NOVEL_ID: LazyLock<VisualNovelId> = LazyLock::new(|| {
+  let id = format!("{}{}", VisualNovelId::PREFIX, 1194);
+  VisualNovelId::new(&id).unwrap()
+});
 
 #[tokio::test]
 async fn get_visual_novel() {
@@ -30,7 +35,7 @@ async fn get_visual_novel() {
     .unwrap();
 
   let title = visual_novel.title.as_deref().unwrap();
-  assert_eq!(visual_novel.id, VisualNovelId::from(NOVEL_ID));
+  assert_eq!(visual_novel.id, *NOVEL_ID);
   assert!(title.eq_ignore_ascii_case(NOVEL));
 
   let main = visual_novel
@@ -48,14 +53,15 @@ async fn get_visual_novel() {
 #[tokio::test]
 async fn find_visual_novel() {
   let visual_novel = Vndb::new()
-    .find_visual_novel(NOVEL_ID)
+    .find_visual_novel(&NOVEL_ID)
     .fields(Title)
     .send()
     .await
     .unwrap()
-    .swap_remove(0);
+    .pop_front()
+    .unwrap();
 
-  assert_eq!(visual_novel.id, VisualNovelId::from(NOVEL_ID));
+  assert_eq!(visual_novel.id, *NOVEL_ID);
   assert_eq!(visual_novel.title.as_deref(), Some(NOVEL));
 }
 
@@ -67,8 +73,9 @@ async fn search_visual_novel() {
     .send()
     .await
     .unwrap()
-    .swap_remove(0);
+    .pop_front()
+    .unwrap();
 
-  assert_eq!(visual_novel.id, VisualNovelId::from(NOVEL_ID));
+  assert_eq!(visual_novel.id, *NOVEL_ID);
   assert_eq!(visual_novel.title.as_deref(), Some(NOVEL));
 }

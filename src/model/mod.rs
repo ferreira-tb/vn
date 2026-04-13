@@ -39,6 +39,7 @@ pub mod prelude {
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
+use std::collections::VecDeque;
 use std::fmt;
 
 #[remain::sorted]
@@ -49,7 +50,7 @@ pub struct Response<T> {
   pub count: Option<u32>,
   pub more: bool,
   pub normalized_filters: Option<JsonValue>,
-  pub results: Vec<T>,
+  pub results: VecDeque<T>,
 }
 
 impl<T> Response<T> {
@@ -57,20 +58,32 @@ impl<T> Response<T> {
     self.results.get(index)
   }
 
-  pub fn first(&self) -> Option<&T> {
-    self.results.first()
+  pub fn front(&self) -> Option<&T> {
+    self.results.front()
   }
 
-  pub fn last(&self) -> Option<&T> {
-    self.results.last()
+  pub fn back(&self) -> Option<&T> {
+    self.results.back()
   }
 
-  pub fn remove(&mut self, index: usize) -> T {
+  pub fn remove(&mut self, index: usize) -> Option<T> {
     self.results.remove(index)
   }
 
-  pub fn swap_remove(&mut self, index: usize) -> T {
-    self.results.swap_remove(index)
+  pub fn swap_remove_front(&mut self, index: usize) -> Option<T> {
+    self.results.swap_remove_front(index)
+  }
+
+  pub fn swap_remove_back(&mut self, index: usize) -> Option<T> {
+    self.results.swap_remove_back(index)
+  }
+
+  pub fn pop_front(&mut self) -> Option<T> {
+    self.results.pop_front()
+  }
+
+  pub fn pop_back(&mut self) -> Option<T> {
+    self.results.pop_back()
   }
 
   #[inline]
@@ -90,7 +103,7 @@ impl<T> Response<T> {
 
 impl<T> IntoIterator for Response<T> {
   type Item = T;
-  type IntoIter = std::vec::IntoIter<Self::Item>;
+  type IntoIter = std::collections::vec_deque::IntoIter<Self::Item>;
 
   fn into_iter(self) -> Self::IntoIter {
     self.results.into_iter()
