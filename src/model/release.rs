@@ -23,6 +23,7 @@ pub struct Release {
   pub gtin: Option<String>,
   pub has_ero: Option<bool>,
   pub id: ReleaseId,
+  pub images: Option<Vec<ReleaseImage>>,
   pub languages: Option<Vec<ReleaseLanguage>>,
   pub media: Option<Vec<ReleaseMedia>>,
   pub minage: Option<u32>,

@@ -20,6 +20,7 @@ pub struct Trait {
   pub id: TraitId,
   pub name: Option<String>,
   pub searchable: Option<bool>,
+  pub sexual: Option<bool>,
 }
 
 impl From<Trait> for TraitId {
@@ -80,6 +81,10 @@ pub enum TraitField {
   #[serde(rename = "searchable")]
   #[strum(serialize = "searchable")]
   Searchable,
+
+  #[serde(rename = "sexual")]
+  #[strum(serialize = "sexual")]
+  Sexual,
 }
 
 impl QueryField for TraitField {}

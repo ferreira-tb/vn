@@ -17,7 +17,7 @@ async fn get_release() {
     .post()
     .release()
     .filters(filters.try_into().unwrap())
-    .fields([Title, AltTitle])
+    .fields([Title, AltTitle, ImagesUrl])
     .results(5)
     .send()
     .await
@@ -37,6 +37,13 @@ async fn get_release() {
   let title = release.title.as_deref().unwrap();
   assert_eq!(&release.id, &*KUSARIHIME_ID);
   assert!(title.eq_ignore_ascii_case(KUSARIHIME));
+
+  assert!(
+    release
+      .images
+      .as_ref()
+      .is_some_and(|it| !it.is_empty())
+  );
 }
 
 #[tokio::test]

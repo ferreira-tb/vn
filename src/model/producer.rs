@@ -1,5 +1,6 @@
 use super::schema::Language;
 use super::{QueryField, SortQueryBy};
+use crate::model::release::ExternalLink;
 use crate::{impl_id_newtype, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
@@ -14,6 +15,7 @@ static ID_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^p\d+$").unwrap
 pub struct Producer {
   pub aliases: Option<Vec<String>>,
   pub description: Option<String>,
+  pub extlinks: Option<Vec<ExternalLink>>,
   pub id: ProducerId,
   pub lang: Option<Language>,
   pub name: Option<String>,
@@ -69,6 +71,22 @@ pub enum ProducerField {
   #[serde(rename = "description")]
   #[strum(serialize = "description")]
   Description,
+
+  #[serde(rename = "extlinks.id")]
+  #[strum(serialize = "extlinks.id")]
+  ExtlinksId,
+
+  #[serde(rename = "extlinks.label")]
+  #[strum(serialize = "extlinks.label")]
+  ExtlinksLabel,
+
+  #[serde(rename = "extlinks.name")]
+  #[strum(serialize = "extlinks.name")]
+  ExtlinksName,
+
+  #[serde(rename = "extlinks.url")]
+  #[strum(serialize = "extlinks.url")]
+  ExtlinksUrl,
 
   #[serde(rename = "id")]
   #[strum(serialize = "id")]
