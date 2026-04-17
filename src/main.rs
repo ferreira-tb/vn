@@ -11,7 +11,7 @@ use vn::{
 struct Cli {
   id: VndbId,
 
-  #[arg(long)]
+  #[arg(short = 'f', long)]
   field: Vec<String>,
 }
 
