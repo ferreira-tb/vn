@@ -68,7 +68,7 @@ impl From<VisualNovel> for VisualNovelId {
 pub struct VisualNovelId(Arc<str>);
 
 impl VisualNovelId {
-  pub const PREFIX: &'static str = "v";
+  pub const PREFIX: char = 'v';
 }
 
 impl_id_newtype!(VisualNovelId, ID_REGEX);

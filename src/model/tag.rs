@@ -43,7 +43,7 @@ impl From<Tag> for TagId {
 pub struct TagId(Arc<str>);
 
 impl TagId {
-  pub const PREFIX: &'static str = "g";
+  pub const PREFIX: char = 'g';
 }
 
 impl_id_newtype!(TagId, ID_REGEX);

@@ -60,7 +60,7 @@ impl From<Release> for ReleaseId {
 pub struct ReleaseId(Arc<str>);
 
 impl ReleaseId {
-  pub const PREFIX: &'static str = "r";
+  pub const PREFIX: char = 'r';
 }
 
 impl_id_newtype!(ReleaseId, ID_REGEX);

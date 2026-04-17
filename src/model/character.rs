@@ -58,7 +58,7 @@ impl From<Character> for CharacterId {
 pub struct CharacterId(Arc<str>);
 
 impl CharacterId {
-  pub const PREFIX: &'static str = "c";
+  pub const PREFIX: char = 'c';
 }
 
 impl_id_newtype!(CharacterId, ID_REGEX);

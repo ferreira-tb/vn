@@ -45,7 +45,7 @@ impl From<Producer> for ProducerId {
 pub struct ProducerId(Arc<str>);
 
 impl ProducerId {
-  pub const PREFIX: &'static str = "p";
+  pub const PREFIX: char = 'p';
 }
 
 impl_id_newtype!(ProducerId, ID_REGEX);

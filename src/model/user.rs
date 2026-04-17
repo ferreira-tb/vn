@@ -46,7 +46,7 @@ impl From<User> for UserId {
 pub struct UserId(Arc<str>);
 
 impl UserId {
-  pub const PREFIX: &'static str = "u";
+  pub const PREFIX: char = 'u';
 }
 
 impl_id_newtype!(UserId, ID_REGEX);

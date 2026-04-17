@@ -45,7 +45,7 @@ impl From<Trait> for TraitId {
 pub struct TraitId(Arc<str>);
 
 impl TraitId {
-  pub const PREFIX: &'static str = "i";
+  pub const PREFIX: char = 'i';
 }
 
 impl_id_newtype!(TraitId, ID_REGEX);
