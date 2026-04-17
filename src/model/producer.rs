@@ -42,7 +42,7 @@ impl From<Producer> for ProducerId {
   derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct ProducerId(Arc<str>);
+pub struct ProducerId(#[cfg_attr(feature = "specta", specta(type = String))] Arc<str>);
 
 impl ProducerId {
   pub const PREFIX: char = 'p';

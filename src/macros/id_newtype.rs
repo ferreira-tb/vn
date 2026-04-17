@@ -48,6 +48,16 @@ macro_rules! impl_id_newtype {
       pub fn regex() -> &'static regex::Regex {
         &$regex
       }
+
+      /// Converts this id to a URL.
+      /// The URL will be in the format `https://vndb.org/{id}`.
+      ///
+      /// # Panics
+      ///
+      /// Panics if the URL cannot be parsed, which should never happen with valid ids.
+      pub fn to_url(&self) -> url::Url {
+        url::Url::parse(&format!("https://vndb.org/{self}")).unwrap()
+      }
     }
 
     impl Clone for $id {

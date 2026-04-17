@@ -65,7 +65,7 @@ impl From<VisualNovel> for VisualNovelId {
   derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct VisualNovelId(Arc<str>);
+pub struct VisualNovelId(#[cfg_attr(feature = "specta", specta(type = String))] Arc<str>);
 
 impl VisualNovelId {
   pub const PREFIX: char = 'v';

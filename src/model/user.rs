@@ -43,7 +43,7 @@ impl From<User> for UserId {
   derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct UserId(Arc<str>);
+pub struct UserId(#[cfg_attr(feature = "specta", specta(type = String))] Arc<str>);
 
 impl UserId {
   pub const PREFIX: char = 'u';

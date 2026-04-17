@@ -42,7 +42,7 @@ impl From<Trait> for TraitId {
   derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct TraitId(Arc<str>);
+pub struct TraitId(#[cfg_attr(feature = "specta", specta(type = String))] Arc<str>);
 
 impl TraitId {
   pub const PREFIX: char = 'i';

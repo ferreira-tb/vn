@@ -40,7 +40,7 @@ impl From<Tag> for TagId {
   derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct TagId(Arc<str>);
+pub struct TagId(#[cfg_attr(feature = "specta", specta(type = String))] Arc<str>);
 
 impl TagId {
   pub const PREFIX: char = 'g';

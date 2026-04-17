@@ -57,7 +57,7 @@ impl From<Release> for ReleaseId {
   derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct ReleaseId(Arc<str>);
+pub struct ReleaseId(#[cfg_attr(feature = "specta", specta(type = String))] Arc<str>);
 
 impl ReleaseId {
   pub const PREFIX: char = 'r';

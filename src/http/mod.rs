@@ -2,7 +2,7 @@ mod query;
 pub mod request;
 
 pub use query::{FieldSet, JsonQuery, JsonQueryBuilder, JsonQueryFilter, UrlQueryParams};
-pub use request::BASE_URL;
+pub use request::API_BASE_URL;
 pub use request::get::Get;
 pub use request::post::Post;
 use serde::{Deserialize, Serialize};
@@ -73,6 +73,6 @@ pub enum Endpoint {
 
 impl Endpoint {
   pub fn url(self) -> Url {
-    Url::parse(&format!("{BASE_URL}/{self}")).unwrap()
+    Url::parse(&format!("{API_BASE_URL}/{self}")).unwrap()
   }
 }

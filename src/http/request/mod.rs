@@ -14,7 +14,7 @@ use tokio::sync::{OwnedSemaphorePermit, Semaphore};
 use tokio::task::spawn;
 use tokio::time::{Duration, sleep};
 
-pub const BASE_URL: &str = "https://api.vndb.org/kana";
+pub const API_BASE_URL: &str = "https://api.vndb.org/kana";
 const DEFAULT_USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
 
 static HTTP: LazyLock<Client> = LazyLock::new(|| {
