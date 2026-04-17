@@ -11,7 +11,6 @@ pub mod user;
 pub mod visual_novel;
 
 pub mod prelude {
-  pub use super::Response;
   pub use super::auth_info::{AuthInfo, TokenPermission};
   pub use super::character::{
     Character, CharacterBirthday, CharacterField, CharacterId, CharacterImage, CharacterSex,
@@ -35,12 +34,16 @@ pub mod prelude {
     VisualNovelScreenShot, VisualNovelStaff, VisualNovelTag, VisualNovelTitle,
     VisualNovelVoiceActor,
   };
+  pub use super::{Response, VndbId};
 }
 
+use crate::error::{Error, Result};
 use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
 use std::collections::VecDeque;
 use std::fmt;
+use std::str::FromStr;
+use strum::EnumIs;
 
 #[remain::sorted]
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -63,7 +66,7 @@ impl<T> IntoIterator for Response<T> {
 }
 
 #[remain::sorted]
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize, EnumIs)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 #[serde(tag = "kind", rename_all = "kebab-case")]
 pub enum VndbId {
@@ -75,6 +78,58 @@ pub enum VndbId {
   Trait(r#trait::TraitId),
   User(user::UserId),
   VisualNovel(visual_novel::VisualNovelId),
+}
+
+impl VndbId {
+  pub fn new(id: impl AsRef<str>) -> Option<Self> {
+    Self::try_from(id.as_ref()).ok()
+  }
+}
+
+impl FromStr for VndbId {
+  type Err = Error;
+
+  fn from_str(s: &str) -> Result<Self> {
+    let prefix = s
+      .chars()
+      .next()
+      .ok_or_else(|| Error::InvalidId(s.to_owned()))?;
+
+    match prefix {
+      character::CharacterId::PREFIX => Ok(Self::Character(s.parse()?)),
+      producer::ProducerId::PREFIX => Ok(Self::Producer(s.parse()?)),
+      release::ReleaseId::PREFIX => Ok(Self::Release(s.parse()?)),
+      staff::StaffId::PREFIX => Ok(Self::Staff(s.parse()?)),
+      tag::TagId::PREFIX => Ok(Self::Tag(s.parse()?)),
+      r#trait::TraitId::PREFIX => Ok(Self::Trait(s.parse()?)),
+      user::UserId::PREFIX => Ok(Self::User(s.parse()?)),
+      visual_novel::VisualNovelId::PREFIX => Ok(Self::VisualNovel(s.parse()?)),
+      _ => Err(Error::InvalidId(s.to_owned())),
+    }
+  }
+}
+
+impl TryFrom<&str> for VndbId {
+  type Error = Error;
+
+  fn try_from(value: &str) -> Result<Self> {
+    value.parse()
+  }
+}
+
+impl fmt::Display for VndbId {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    match self {
+      Self::Character(id) => id.fmt(f),
+      Self::Producer(id) => id.fmt(f),
+      Self::Release(id) => id.fmt(f),
+      Self::Staff(id) => id.fmt(f),
+      Self::Tag(id) => id.fmt(f),
+      Self::Trait(id) => id.fmt(f),
+      Self::User(id) => id.fmt(f),
+      Self::VisualNovel(id) => id.fmt(f),
+    }
+  }
 }
 
 pub trait QueryField: fmt::Display + sealed::Sealed {}

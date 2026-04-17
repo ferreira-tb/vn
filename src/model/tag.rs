@@ -46,7 +46,7 @@ impl TagId {
   pub const PREFIX: char = 'g';
 }
 
-impl_id_newtype!(TagId, ID_REGEX);
+impl_id_newtype!(Tag, TagId, ID_REGEX);
 
 #[non_exhaustive]
 #[remain::sorted]

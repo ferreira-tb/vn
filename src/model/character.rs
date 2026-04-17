@@ -61,7 +61,7 @@ impl CharacterId {
   pub const PREFIX: char = 'c';
 }
 
-impl_id_newtype!(CharacterId, ID_REGEX);
+impl_id_newtype!(Character, CharacterId, ID_REGEX);
 
 #[remain::sorted]
 #[derive(Clone, Debug, Serialize)]

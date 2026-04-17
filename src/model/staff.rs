@@ -50,7 +50,7 @@ impl StaffId {
   pub const PREFIX: char = 's';
 }
 
-impl_id_newtype!(StaffId, ID_REGEX);
+impl_id_newtype!(Staff, StaffId, ID_REGEX);
 
 #[remain::sorted]
 #[derive(Clone, Debug, Deserialize, Serialize)]

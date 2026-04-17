@@ -63,7 +63,7 @@ impl ReleaseId {
   pub const PREFIX: char = 'r';
 }
 
-impl_id_newtype!(ReleaseId, ID_REGEX);
+impl_id_newtype!(Release, ReleaseId, ID_REGEX);
 
 #[remain::sorted]
 #[derive(Clone, Debug, Deserialize, Serialize)]

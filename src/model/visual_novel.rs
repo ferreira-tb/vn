@@ -71,7 +71,7 @@ impl VisualNovelId {
   pub const PREFIX: char = 'v';
 }
 
-impl_id_newtype!(VisualNovelId, ID_REGEX);
+impl_id_newtype!(VisualNovel, VisualNovelId, ID_REGEX);
 
 #[non_exhaustive]
 #[remain::sorted]

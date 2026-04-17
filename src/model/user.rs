@@ -49,7 +49,7 @@ impl UserId {
   pub const PREFIX: char = 'u';
 }
 
-impl_id_newtype!(UserId, ID_REGEX);
+impl_id_newtype!(User, UserId, ID_REGEX);
 
 #[derive(Clone, Debug, Default, Serialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]

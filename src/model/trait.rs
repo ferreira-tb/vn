@@ -48,7 +48,7 @@ impl TraitId {
   pub const PREFIX: char = 'i';
 }
 
-impl_id_newtype!(TraitId, ID_REGEX);
+impl_id_newtype!(Trait, TraitId, ID_REGEX);
 
 #[non_exhaustive]
 #[remain::sorted]

@@ -48,7 +48,7 @@ impl ProducerId {
   pub const PREFIX: char = 'p';
 }
 
-impl_id_newtype!(ProducerId, ID_REGEX);
+impl_id_newtype!(Producer, ProducerId, ID_REGEX);
 
 #[non_exhaustive]
 #[remain::sorted]
