@@ -6,12 +6,12 @@ pub use request::BASE_URL;
 pub use request::get::Get;
 pub use request::post::Post;
 use serde::{Deserialize, Serialize};
-use strum::{Display, VariantArray};
+use strum::{Display, EnumString, VariantArray};
 use url::Url;
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Copy, Clone, Debug, Deserialize, Serialize, Display, VariantArray)]
+#[derive(Copy, Clone, Debug, Deserialize, Serialize, Display, EnumString, VariantArray)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum Endpoint {
   #[serde(rename = "authinfo")]

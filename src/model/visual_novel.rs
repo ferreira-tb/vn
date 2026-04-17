@@ -1,3 +1,4 @@
+use super::character::Character;
 use super::producer::Producer;
 use super::release::ExternalLink;
 use super::schema::Language;
@@ -8,8 +9,8 @@ use crate::{impl_id_newtype, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Deserializer, Serialize};
 use std::result::Result as StdResult;
-use std::sync::LazyLock;
-use strum::{Display, EnumIs, VariantArray};
+use std::sync::{Arc, LazyLock};
+use strum::{Display, EnumIs, EnumString, VariantArray};
 
 static ID_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^v\d+$").unwrap());
 
@@ -52,7 +53,6 @@ impl From<VisualNovel> for VisualNovelId {
 }
 
 #[derive(
-  Clone,
   Debug,
   Deserialize,
   Serialize,
@@ -65,13 +65,13 @@ impl From<VisualNovel> for VisualNovelId {
   derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct VisualNovelId(Box<str>);
+pub struct VisualNovelId(Arc<str>);
 
 impl VisualNovelId {
-  pub const PREFIX: &'static str = "v";
+  pub const PREFIX: char = 'v';
 }
 
-impl_id_newtype!(VisualNovelId, ID_REGEX);
+impl_id_newtype!(VisualNovel, VisualNovelId, ID_REGEX);
 
 #[non_exhaustive]
 #[remain::sorted]
@@ -243,14 +243,14 @@ pub struct VisualNovelTitle {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub struct VisualNovelVoiceActor {
-  // pub character: Option<Character>,
+  pub character: Option<Character>,
   pub note: Option<String>,
   pub staff: Option<Staff>,
 }
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, VariantArray)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, EnumString, VariantArray)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum VisualNovelField {
   #[serde(rename = "aliases")]
@@ -497,9 +497,17 @@ pub enum VisualNovelField {
   #[strum(serialize = "titles.title")]
   TitlesTitle,
 
+  #[serde(rename = "va.character.id")]
+  #[strum(serialize = "va.character.id")]
+  VaCharacterId,
+
   #[serde(rename = "va.note")]
   #[strum(serialize = "va.note")]
   VaNote,
+
+  #[serde(rename = "va.staff.id")]
+  #[strum(serialize = "va.staff.id")]
+  VaStaffId,
 
   #[serde(rename = "votecount")]
   #[strum(serialize = "votecount")]
@@ -512,7 +520,7 @@ impl_into_field_set!(VisualNovelField);
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, EnumString)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum SortVisualNovelBy {
   #[serde(rename = "id")]

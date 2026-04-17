@@ -2,8 +2,8 @@ use super::{QueryField, SortQueryBy};
 use crate::{impl_id_newtype, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use std::sync::LazyLock;
-use strum::{Display, VariantArray};
+use std::sync::{Arc, LazyLock};
+use strum::{Display, EnumString, VariantArray};
 
 static ID_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^i\d+$").unwrap());
 
@@ -30,7 +30,6 @@ impl From<Trait> for TraitId {
 }
 
 #[derive(
-  Clone,
   Debug,
   Deserialize,
   Serialize,
@@ -43,17 +42,17 @@ impl From<Trait> for TraitId {
   derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct TraitId(Box<str>);
+pub struct TraitId(Arc<str>);
 
 impl TraitId {
-  pub const PREFIX: &'static str = "i";
+  pub const PREFIX: char = 'i';
 }
 
-impl_id_newtype!(TraitId, ID_REGEX);
+impl_id_newtype!(Trait, TraitId, ID_REGEX);
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, VariantArray)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, EnumString, VariantArray)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum TraitField {
   #[serde(rename = "aliases")]
@@ -103,7 +102,7 @@ impl_into_field_set!(TraitField);
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, EnumString)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum SortTraitBy {
   #[serde(rename = "char_count")]

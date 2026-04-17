@@ -1,12 +1,12 @@
 #[doc(hidden)]
 #[macro_export]
 macro_rules! impl_id_newtype {
-  ($target:ident, $regex:expr) => {
-    impl $target {
+  ($kind:ident, $id:ident, $regex:expr) => {
+    impl $id {
       pub fn new(id: impl AsRef<str>) -> Option<Self> {
         let id = id.as_ref();
         if $regex.is_match(id) {
-          Some(Self(Box::from(id)))
+          Some(Self(std::sync::Arc::from(id)))
         } else {
           None
         }
@@ -35,13 +35,19 @@ macro_rules! impl_id_newtype {
       }
     }
 
-    impl PartialEq<str> for $target {
+    impl Clone for $id {
+      fn clone(&self) -> Self {
+        Self(std::sync::Arc::clone(&self.0))
+      }
+    }
+
+    impl PartialEq<str> for $id {
       fn eq(&self, other: &str) -> bool {
         self.0.as_ref() == other
       }
     }
 
-    impl std::ops::Deref for $target {
+    impl std::ops::Deref for $id {
       type Target = str;
 
       fn deref(&self) -> &Self::Target {
@@ -49,7 +55,7 @@ macro_rules! impl_id_newtype {
       }
     }
 
-    impl std::str::FromStr for $target {
+    impl std::str::FromStr for $id {
       type Err = $crate::error::Error;
 
       fn from_str(id: &str) -> Result<Self, Self::Err> {
@@ -57,8 +63,14 @@ macro_rules! impl_id_newtype {
       }
     }
 
+    impl From<$id> for $crate::model::VndbId {
+      fn from(id: $id) -> Self {
+        $crate::model::VndbId::$kind(id)
+      }
+    }
+
     #[cfg(feature = "diesel_sqlite")]
-    impl diesel::deserialize::FromSql<diesel::sql_types::Text, diesel::sqlite::Sqlite> for $target {
+    impl diesel::deserialize::FromSql<diesel::sql_types::Text, diesel::sqlite::Sqlite> for $id {
       fn from_sql(
         bytes: <diesel::sqlite::Sqlite as diesel::backend::Backend>::RawValue<'_>,
       ) -> diesel::deserialize::Result<Self> {
@@ -72,7 +84,7 @@ macro_rules! impl_id_newtype {
     }
 
     #[cfg(feature = "diesel_sqlite")]
-    impl diesel::serialize::ToSql<diesel::sql_types::Text, diesel::sqlite::Sqlite> for $target
+    impl diesel::serialize::ToSql<diesel::sql_types::Text, diesel::sqlite::Sqlite> for $id
     where
       String: diesel::serialize::ToSql<diesel::sql_types::Text, diesel::sqlite::Sqlite>,
     {

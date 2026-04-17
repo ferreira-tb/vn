@@ -9,8 +9,8 @@ use serde::{Deserialize, Deserializer, Serialize};
 use std::collections::{HashMap, HashSet};
 use std::ops::{Deref, DerefMut};
 use std::result::Result as StdResult;
-use std::sync::LazyLock;
-use strum::{Display, VariantArray};
+use std::sync::{Arc, LazyLock};
+use strum::{Display, EnumString, VariantArray};
 
 static ID_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^u\d+$").unwrap());
 
@@ -31,7 +31,6 @@ impl From<User> for UserId {
 }
 
 #[derive(
-  Clone,
   Debug,
   Deserialize,
   Serialize,
@@ -44,13 +43,13 @@ impl From<User> for UserId {
   derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct UserId(Box<str>);
+pub struct UserId(Arc<str>);
 
 impl UserId {
-  pub const PREFIX: &'static str = "u";
+  pub const PREFIX: char = 'u';
 }
 
-impl_id_newtype!(UserId, ID_REGEX);
+impl_id_newtype!(User, UserId, ID_REGEX);
 
 #[derive(Clone, Debug, Default, Serialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
@@ -93,7 +92,7 @@ impl DerefMut for Users {
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, VariantArray)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, EnumString, VariantArray)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum UserField {
   #[serde(rename = "lengthvotes")]

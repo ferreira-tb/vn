@@ -4,8 +4,8 @@ use crate::model::release::ExternalLink;
 use crate::{impl_id_newtype, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use std::sync::LazyLock;
-use strum::{Display, EnumIs, VariantArray};
+use std::sync::{Arc, LazyLock};
+use strum::{Display, EnumIs, EnumString, VariantArray};
 
 static ID_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^p\d+$").unwrap());
 
@@ -30,7 +30,6 @@ impl From<Producer> for ProducerId {
 }
 
 #[derive(
-  Clone,
   Debug,
   Deserialize,
   Serialize,
@@ -43,17 +42,19 @@ impl From<Producer> for ProducerId {
   derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct ProducerId(Box<str>);
+pub struct ProducerId(Arc<str>);
 
 impl ProducerId {
-  pub const PREFIX: &'static str = "p";
+  pub const PREFIX: char = 'p';
 }
 
-impl_id_newtype!(ProducerId, ID_REGEX);
+impl_id_newtype!(Producer, ProducerId, ID_REGEX);
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Copy, Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash, Display, EnumIs)]
+#[derive(
+  Copy, Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash, Display, EnumIs, EnumString,
+)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum ProducerType {
   #[serde(rename = "ng")]
@@ -71,7 +72,7 @@ pub enum ProducerType {
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, VariantArray)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, EnumString, VariantArray)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum ProducerField {
   #[serde(rename = "aliases")]
@@ -125,7 +126,7 @@ impl_into_field_set!(ProducerField);
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, EnumString)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum SortProducerBy {
   #[serde(rename = "id")]

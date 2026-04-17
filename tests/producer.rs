@@ -45,6 +45,7 @@ async fn find_producer() {
     .send()
     .await
     .unwrap()
+    .results
     .pop_front()
     .unwrap();
 
@@ -61,6 +62,7 @@ async fn search_producer() {
     .send()
     .await
     .unwrap()
+    .results
     .pop_front()
     .unwrap();
 

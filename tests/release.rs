@@ -54,6 +54,7 @@ async fn find_release() {
     .send()
     .await
     .unwrap()
+    .results
     .pop_front()
     .unwrap();
 

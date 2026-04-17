@@ -4,8 +4,8 @@ use super::{QueryField, SortQueryBy};
 use crate::{impl_id_newtype, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use std::sync::LazyLock;
-use strum::{Display, EnumIs, VariantArray};
+use std::sync::{Arc, LazyLock};
+use strum::{Display, EnumIs, EnumString, VariantArray};
 
 static ID_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^s\d+$").unwrap());
 
@@ -32,7 +32,6 @@ impl From<Staff> for StaffId {
 }
 
 #[derive(
-  Clone,
   Debug,
   Deserialize,
   Serialize,
@@ -45,13 +44,13 @@ impl From<Staff> for StaffId {
   derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct StaffId(Box<str>);
+pub struct StaffId(Arc<str>);
 
 impl StaffId {
-  pub const PREFIX: &'static str = "s";
+  pub const PREFIX: char = 's';
 }
 
-impl_id_newtype!(StaffId, ID_REGEX);
+impl_id_newtype!(Staff, StaffId, ID_REGEX);
 
 #[remain::sorted]
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -65,7 +64,9 @@ pub struct StaffAlias {
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Copy, Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash, Display, EnumIs)]
+#[derive(
+  Copy, Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash, Display, EnumIs, EnumString,
+)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum StaffGender {
   #[serde(rename = "f")]
@@ -79,7 +80,7 @@ pub enum StaffGender {
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, VariantArray)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, EnumString, VariantArray)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum StaffField {
   #[serde(rename = "aid")]
@@ -153,7 +154,7 @@ impl_into_field_set!(StaffField);
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, EnumString)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum SortStaffBy {
   #[serde(rename = "id")]

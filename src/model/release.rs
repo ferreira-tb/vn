@@ -6,8 +6,8 @@ use crate::{impl_id_newtype, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::Value as JsonValue;
-use std::sync::LazyLock;
-use strum::{Display, EnumIs, VariantArray};
+use std::sync::{Arc, LazyLock};
+use strum::{Display, EnumIs, EnumString, VariantArray};
 
 static ID_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^r\d+$").unwrap());
 
@@ -45,7 +45,6 @@ impl From<Release> for ReleaseId {
 }
 
 #[derive(
-  Clone,
   Debug,
   Deserialize,
   Serialize,
@@ -58,13 +57,13 @@ impl From<Release> for ReleaseId {
   derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct ReleaseId(Box<str>);
+pub struct ReleaseId(Arc<str>);
 
 impl ReleaseId {
-  pub const PREFIX: &'static str = "r";
+  pub const PREFIX: char = 'r';
 }
 
-impl_id_newtype!(ReleaseId, ID_REGEX);
+impl_id_newtype!(Release, ReleaseId, ID_REGEX);
 
 #[remain::sorted]
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -144,7 +143,9 @@ pub enum ReleaseResolution {
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Copy, Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash, Display, EnumIs)]
+#[derive(
+  Copy, Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash, Display, EnumIs, EnumString,
+)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum ReleaseType {
   #[serde(rename = "complete")]
@@ -214,7 +215,7 @@ pub struct ExternalLink {
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, VariantArray)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, EnumString, VariantArray)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum ReleaseField {
   #[serde(rename = "alttitle")]
@@ -380,7 +381,7 @@ impl_into_field_set!(ReleaseField);
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, EnumString)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum SortReleaseBy {
   #[serde(rename = "id")]

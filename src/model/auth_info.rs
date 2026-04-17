@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use strum::Display;
+use strum::{Display, EnumString};
 
 #[remain::sorted]
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -12,7 +12,7 @@ pub struct AuthInfo {
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, EnumString)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum TokenPermission {
   #[serde(rename = "listread")]
