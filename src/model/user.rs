@@ -31,7 +31,17 @@ impl From<User> for UserId {
 }
 
 #[derive(
-  Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash, derive_more::Display, derive_more::Into,
+  Clone,
+  Debug,
+  Deserialize,
+  Serialize,
+  PartialEq,
+  Eq,
+  PartialOrd,
+  Ord,
+  Hash,
+  derive_more::Display,
+  derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub struct UserId(Box<str>);
