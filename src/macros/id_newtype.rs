@@ -30,6 +30,21 @@ macro_rules! impl_id_newtype {
         unsafe { Self::with_suffix(suffix).unwrap_unchecked() }
       }
 
+      pub fn from_url(url: &url::Url) -> Option<Self> {
+        if url.host_str()?.contains("vndb.org") {
+          url.path_segments()?.find_map(Self::new)
+        } else {
+          None
+        }
+      }
+
+      /// # Safety
+      ///
+      /// Calling this function with a URL that doesn't contain a valid id is undefined behavior.
+      pub unsafe fn from_url_unchecked(url: &url::Url) -> Self {
+        unsafe { Self::from_url(url).unwrap_unchecked() }
+      }
+
       pub fn regex() -> &'static regex::Regex {
         &$regex
       }

@@ -16,6 +16,7 @@ struct Cli {
 }
 
 #[tokio::main]
+#[expect(clippy::too_many_lines)]
 async fn main() -> Result<()> {
   let args = Cli::parse();
   let vndb = Vndb::new();
@@ -23,7 +24,7 @@ async fn main() -> Result<()> {
   match args.id {
     VndbId::Character(id) => {
       let fields = if args.field.is_empty() {
-        FieldSet::from(CharacterField::all())
+        CharacterField::all()
       } else {
         FieldSet::from_raw(args.field)
       };
@@ -43,7 +44,7 @@ async fn main() -> Result<()> {
     }
     VndbId::Producer(id) => {
       let fields = if args.field.is_empty() {
-        FieldSet::from(ProducerField::all())
+        ProducerField::all()
       } else {
         FieldSet::from_raw(args.field)
       };
@@ -63,7 +64,7 @@ async fn main() -> Result<()> {
     }
     VndbId::Release(id) => {
       let fields = if args.field.is_empty() {
-        FieldSet::from(ReleaseField::all())
+        ReleaseField::all()
       } else {
         FieldSet::from_raw(args.field)
       };
@@ -83,7 +84,7 @@ async fn main() -> Result<()> {
     }
     VndbId::Staff(id) => {
       let fields = if args.field.is_empty() {
-        FieldSet::from(StaffField::all())
+        StaffField::all()
       } else {
         FieldSet::from_raw(args.field)
       };
@@ -103,7 +104,7 @@ async fn main() -> Result<()> {
     }
     VndbId::Tag(id) => {
       let fields = if args.field.is_empty() {
-        FieldSet::from(TagField::all())
+        TagField::all()
       } else {
         FieldSet::from_raw(args.field)
       };
@@ -123,7 +124,7 @@ async fn main() -> Result<()> {
     }
     VndbId::Trait(id) => {
       let fields = if args.field.is_empty() {
-        FieldSet::from(TraitField::all())
+        TraitField::all()
       } else {
         FieldSet::from_raw(args.field)
       };
@@ -150,7 +151,7 @@ async fn main() -> Result<()> {
     }
     VndbId::VisualNovel(id) => {
       let fields = if args.field.is_empty() {
-        FieldSet::from(VisualNovelField::all())
+        VisualNovelField::all()
       } else {
         FieldSet::from_raw(args.field)
       };
