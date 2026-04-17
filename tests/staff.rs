@@ -47,6 +47,7 @@ async fn find_staff() {
     .send()
     .await
     .unwrap()
+    .results
     .pop_front()
     .unwrap();
 
@@ -63,6 +64,7 @@ async fn search_staff() {
     .send()
     .await
     .unwrap()
+    .results
     .pop_front()
     .unwrap();
 

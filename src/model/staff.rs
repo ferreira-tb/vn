@@ -5,7 +5,7 @@ use crate::{impl_id_newtype, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::sync::LazyLock;
-use strum::{Display, EnumIs, VariantArray};
+use strum::{Display, EnumIs, EnumString, VariantArray};
 
 static ID_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^s\d+$").unwrap());
 
@@ -65,7 +65,9 @@ pub struct StaffAlias {
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Copy, Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash, Display, EnumIs)]
+#[derive(
+  Copy, Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash, Display, EnumIs, EnumString,
+)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum StaffGender {
   #[serde(rename = "f")]
@@ -79,7 +81,7 @@ pub enum StaffGender {
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, VariantArray)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, EnumString, VariantArray)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum StaffField {
   #[serde(rename = "aid")]
@@ -153,7 +155,7 @@ impl_into_field_set!(StaffField);
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, EnumString)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum SortStaffBy {
   #[serde(rename = "id")]

@@ -10,7 +10,7 @@ use std::collections::{HashMap, HashSet};
 use std::ops::{Deref, DerefMut};
 use std::result::Result as StdResult;
 use std::sync::LazyLock;
-use strum::{Display, VariantArray};
+use strum::{Display, EnumString, VariantArray};
 
 static ID_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^u\d+$").unwrap());
 
@@ -93,7 +93,7 @@ impl DerefMut for Users {
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, VariantArray)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, EnumString, VariantArray)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum UserField {
   #[serde(rename = "lengthvotes")]

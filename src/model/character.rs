@@ -7,7 +7,7 @@ use regex::Regex;
 use serde::{Deserialize, Deserializer, Serialize};
 use std::result::Result as StdResult;
 use std::sync::LazyLock;
-use strum::{Display, EnumIs, VariantArray};
+use strum::{Display, EnumIs, EnumString, VariantArray};
 
 static ID_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^c\d+$").unwrap());
 
@@ -102,7 +102,9 @@ impl<'de> Deserialize<'de> for CharacterGender {
 }
 
 #[remain::sorted]
-#[derive(Copy, Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash, Display, EnumIs)]
+#[derive(
+  Copy, Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash, Display, EnumIs, EnumString,
+)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum CharacterGenderValue {
   #[serde(rename = "a")]
@@ -154,7 +156,9 @@ impl<'de> Deserialize<'de> for CharacterSex {
 }
 
 #[remain::sorted]
-#[derive(Copy, Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash, Display, EnumIs)]
+#[derive(
+  Copy, Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash, Display, EnumIs, EnumString,
+)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum CharacterSexValue {
   #[serde(rename = "b")]
@@ -209,7 +213,7 @@ impl From<CharacterVisualNovel> for VisualNovel {
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, VariantArray)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, EnumString, VariantArray)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum CharacterField {
   #[serde(rename = "age")]
@@ -331,7 +335,7 @@ impl_into_field_set!(CharacterField);
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, EnumString)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum SortCharacterBy {
   #[serde(rename = "id")]

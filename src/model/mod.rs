@@ -53,54 +53,6 @@ pub struct Response<T> {
   pub results: VecDeque<T>,
 }
 
-impl<T> Response<T> {
-  pub fn get(&self, index: usize) -> Option<&T> {
-    self.results.get(index)
-  }
-
-  pub fn front(&self) -> Option<&T> {
-    self.results.front()
-  }
-
-  pub fn back(&self) -> Option<&T> {
-    self.results.back()
-  }
-
-  pub fn remove(&mut self, index: usize) -> Option<T> {
-    self.results.remove(index)
-  }
-
-  pub fn swap_remove_front(&mut self, index: usize) -> Option<T> {
-    self.results.swap_remove_front(index)
-  }
-
-  pub fn swap_remove_back(&mut self, index: usize) -> Option<T> {
-    self.results.swap_remove_back(index)
-  }
-
-  pub fn pop_front(&mut self) -> Option<T> {
-    self.results.pop_front()
-  }
-
-  pub fn pop_back(&mut self) -> Option<T> {
-    self.results.pop_back()
-  }
-
-  #[inline]
-  pub fn is_empty(&self) -> bool {
-    self.results.is_empty()
-  }
-
-  #[inline]
-  pub fn len(&self) -> usize {
-    self.results.len()
-  }
-
-  pub fn iter(&self) -> impl Iterator<Item = &T> {
-    self.results.iter()
-  }
-}
-
 impl<T> IntoIterator for Response<T> {
   type Item = T;
   type IntoIter = std::collections::vec_deque::IntoIter<Self::Item>;
@@ -108,6 +60,21 @@ impl<T> IntoIterator for Response<T> {
   fn into_iter(self) -> Self::IntoIter {
     self.results.into_iter()
   }
+}
+
+#[remain::sorted]
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[cfg_attr(feature = "specta", derive(specta::Type))]
+#[serde(tag = "kind", rename_all = "kebab-case")]
+pub enum VndbId {
+  Character(character::CharacterId),
+  Producer(producer::ProducerId),
+  Release(release::ReleaseId),
+  Staff(staff::StaffId),
+  Tag(tag::TagId),
+  Trait(r#trait::TraitId),
+  User(user::UserId),
+  VisualNovel(visual_novel::VisualNovelId),
 }
 
 pub trait QueryField: fmt::Display + sealed::Sealed {}

@@ -33,6 +33,7 @@ async fn get_character() {
     .unwrap();
 
   let character = character
+    .results
     .iter()
     .find(|it| {
       it.name
@@ -56,6 +57,7 @@ async fn find_character() {
     .send()
     .await
     .unwrap()
+    .results
     .pop_front()
     .unwrap();
 
@@ -72,6 +74,7 @@ async fn search_character() {
     .send()
     .await
     .unwrap()
+    .results
     .into_iter()
     .find(|it| &it.id == &*YUKARI_ID)
     .unwrap();

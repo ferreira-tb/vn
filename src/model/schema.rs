@@ -1,7 +1,7 @@
 use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::Value as JsonValue;
 use std::result::Result as StdResult;
-use strum::Display;
+use strum::{Display, EnumString};
 
 #[remain::sorted]
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -24,7 +24,7 @@ pub struct SchemaEnum {
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Clone, Debug, Serialize, PartialEq, Eq, Hash, Display)]
+#[derive(Clone, Debug, Serialize, PartialEq, Eq, Hash, Display, EnumString)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum Language {
   #[serde(rename = "zh")]

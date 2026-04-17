@@ -44,6 +44,7 @@ async fn find_trait() {
     .send()
     .await
     .unwrap()
+    .results
     .pop_front()
     .unwrap();
 
@@ -60,6 +61,7 @@ async fn search_trait() {
     .send()
     .await
     .unwrap()
+    .results
     .pop_front()
     .unwrap();
 

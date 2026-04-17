@@ -43,6 +43,7 @@ async fn find_tag() {
     .send()
     .await
     .unwrap()
+    .results
     .pop_front()
     .unwrap();
 
@@ -59,6 +60,7 @@ async fn search_tag() {
     .send()
     .await
     .unwrap()
+    .results
     .pop_front()
     .unwrap();
 

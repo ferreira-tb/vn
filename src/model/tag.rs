@@ -3,7 +3,7 @@ use crate::{impl_id_newtype, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::sync::LazyLock;
-use strum::{Display, EnumIs, VariantArray};
+use strum::{Display, EnumIs, EnumString, VariantArray};
 
 static ID_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^g\d+$").unwrap());
 
@@ -51,7 +51,9 @@ impl_id_newtype!(TagId, ID_REGEX);
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Copy, Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash, Display, EnumIs)]
+#[derive(
+  Copy, Clone, Debug, Deserialize, Serialize, PartialEq, Eq, Hash, Display, EnumIs, EnumString,
+)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum TagCategory {
   #[serde(rename = "cont")]
@@ -69,7 +71,7 @@ pub enum TagCategory {
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, VariantArray)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, EnumString, VariantArray)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum TagField {
   #[serde(rename = "aliases")]
@@ -111,7 +113,7 @@ impl_into_field_set!(TagField);
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, EnumString)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum SortTagBy {
   #[serde(rename = "id")]

@@ -3,7 +3,7 @@ use crate::{impl_id_newtype, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::sync::LazyLock;
-use strum::{Display, VariantArray};
+use strum::{Display, EnumString, VariantArray};
 
 static ID_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^i\d+$").unwrap());
 
@@ -53,7 +53,7 @@ impl_id_newtype!(TraitId, ID_REGEX);
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, VariantArray)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, EnumString, VariantArray)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum TraitField {
   #[serde(rename = "aliases")]
@@ -103,7 +103,7 @@ impl_into_field_set!(TraitField);
 
 #[non_exhaustive]
 #[remain::sorted]
-#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Display, EnumString)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum SortTraitBy {
   #[serde(rename = "char_count")]
