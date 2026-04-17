@@ -2,7 +2,7 @@ use super::{QueryField, SortQueryBy};
 use crate::{impl_id_newtype, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use std::sync::LazyLock;
+use std::sync::{Arc, LazyLock};
 use strum::{Display, EnumIs, EnumString, VariantArray};
 
 static ID_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^g\d+$").unwrap());
@@ -28,7 +28,6 @@ impl From<Tag> for TagId {
 }
 
 #[derive(
-  Clone,
   Debug,
   Deserialize,
   Serialize,
@@ -41,7 +40,7 @@ impl From<Tag> for TagId {
   derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct TagId(Box<str>);
+pub struct TagId(Arc<str>);
 
 impl TagId {
   pub const PREFIX: &'static str = "g";

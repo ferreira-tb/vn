@@ -2,7 +2,7 @@ use super::{QueryField, SortQueryBy};
 use crate::{impl_id_newtype, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use std::sync::LazyLock;
+use std::sync::{Arc, LazyLock};
 use strum::{Display, EnumString, VariantArray};
 
 static ID_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^i\d+$").unwrap());
@@ -30,7 +30,6 @@ impl From<Trait> for TraitId {
 }
 
 #[derive(
-  Clone,
   Debug,
   Deserialize,
   Serialize,
@@ -43,7 +42,7 @@ impl From<Trait> for TraitId {
   derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct TraitId(Box<str>);
+pub struct TraitId(Arc<str>);
 
 impl TraitId {
   pub const PREFIX: &'static str = "i";

@@ -6,7 +6,7 @@ use crate::{impl_id_newtype, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::Value as JsonValue;
-use std::sync::LazyLock;
+use std::sync::{Arc, LazyLock};
 use strum::{Display, EnumIs, EnumString, VariantArray};
 
 static ID_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^r\d+$").unwrap());
@@ -45,7 +45,6 @@ impl From<Release> for ReleaseId {
 }
 
 #[derive(
-  Clone,
   Debug,
   Deserialize,
   Serialize,
@@ -58,7 +57,7 @@ impl From<Release> for ReleaseId {
   derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct ReleaseId(Box<str>);
+pub struct ReleaseId(Arc<str>);
 
 impl ReleaseId {
   pub const PREFIX: &'static str = "r";

@@ -6,7 +6,7 @@ use crate::{impl_id_newtype, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Deserializer, Serialize};
 use std::result::Result as StdResult;
-use std::sync::LazyLock;
+use std::sync::{Arc, LazyLock};
 use strum::{Display, EnumIs, EnumString, VariantArray};
 
 static ID_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^c\d+$").unwrap());
@@ -43,7 +43,6 @@ impl From<Character> for CharacterId {
 }
 
 #[derive(
-  Clone,
   Debug,
   Deserialize,
   Serialize,
@@ -56,7 +55,7 @@ impl From<Character> for CharacterId {
   derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct CharacterId(Box<str>);
+pub struct CharacterId(Arc<str>);
 
 impl CharacterId {
   pub const PREFIX: &'static str = "c";

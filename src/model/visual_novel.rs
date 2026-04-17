@@ -9,7 +9,7 @@ use crate::{impl_id_newtype, impl_into_field_set};
 use regex::Regex;
 use serde::{Deserialize, Deserializer, Serialize};
 use std::result::Result as StdResult;
-use std::sync::LazyLock;
+use std::sync::{Arc, LazyLock};
 use strum::{Display, EnumIs, EnumString, VariantArray};
 
 static ID_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^v\d+$").unwrap());
@@ -53,7 +53,6 @@ impl From<VisualNovel> for VisualNovelId {
 }
 
 #[derive(
-  Clone,
   Debug,
   Deserialize,
   Serialize,
@@ -66,7 +65,7 @@ impl From<VisualNovel> for VisualNovelId {
   derive_more::Into,
 )]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct VisualNovelId(Box<str>);
+pub struct VisualNovelId(Arc<str>);
 
 impl VisualNovelId {
   pub const PREFIX: &'static str = "v";

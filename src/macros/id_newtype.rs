@@ -6,7 +6,7 @@ macro_rules! impl_id_newtype {
       pub fn new(id: impl AsRef<str>) -> Option<Self> {
         let id = id.as_ref();
         if $regex.is_match(id) {
-          Some(Self(Box::from(id)))
+          Some(Self(std::sync::Arc::from(id)))
         } else {
           None
         }
@@ -32,6 +32,12 @@ macro_rules! impl_id_newtype {
 
       pub fn regex() -> &'static regex::Regex {
         &$regex
+      }
+    }
+
+    impl Clone for $target {
+      fn clone(&self) -> Self {
+        Self(std::sync::Arc::clone(&self.0))
       }
     }
 
