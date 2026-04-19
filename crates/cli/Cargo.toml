@@ -22,6 +22,8 @@ workspace = true
 [dependencies]
 anyhow.workspace = true
 clap.workspace = true
+itertools.workspace = true
+serde.workspace = true
 serde_json.workspace = true
 vn-core.workspace = true
 

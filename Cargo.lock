@@ -1641,6 +1641,8 @@ version = "0.11.0"
 dependencies = [
  "anyhow",
  "clap",
+ "itertools",
+ "serde",
  "serde_json",
  "tokio",
  "vn-core",

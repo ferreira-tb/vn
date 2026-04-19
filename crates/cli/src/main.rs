@@ -1,6 +1,8 @@
-use anyhow::Result;
+use anyhow::{Result, bail};
 use clap::Parser;
-use serde_json::to_string_pretty;
+use itertools::Itertools;
+use serde::Serialize;
+use serde_json::{Value as JsonValue, to_string_pretty};
 use vn_core::http::FieldSet;
 use vn_core::{
   CharacterField, ProducerField, ReleaseField, StaffField, TagField, TraitField, VisualNovelField,
@@ -16,160 +18,100 @@ struct Cli {
 }
 
 #[tokio::main]
-#[expect(clippy::too_many_lines)]
 async fn main() -> Result<()> {
   let args = Cli::parse();
   let vndb = Vndb::new();
 
+  macro_rules! fetch_and_print {
+    ($id:expr, $find_fn:ident, $field_type:ident) => {
+      let fields = if args.field.is_empty() {
+        $field_type::all()
+      } else {
+        FieldSet::from_raw(args.field)
+      };
+
+      if let Some(value) = vndb
+        .$find_fn(&$id)
+        .fields(fields)
+        .send()
+        .await?
+        .results
+        .pop_front()
+        .map(|it| to_value(&it))
+        .transpose()?
+      {
+        println!("{}", to_string_pretty(&value)?);
+      } else {
+        let id = $id;
+        bail!("not found: {id}");
+      }
+    };
+  }
+
   match args.id {
     VndbId::Character(id) => {
-      let fields = if args.field.is_empty() {
-        CharacterField::all()
-      } else {
-        FieldSet::from_raw(args.field)
-      };
-
-      if let Some(character) = vndb
-        .find_character(&id)
-        .fields(fields)
-        .send()
-        .await?
-        .results
-        .pop_front()
-      {
-        println!("{}", to_string_pretty(&character)?);
-      } else {
-        println!("character not found: {id}");
-      }
+      fetch_and_print!(id, find_character, CharacterField);
     }
     VndbId::Producer(id) => {
-      let fields = if args.field.is_empty() {
-        ProducerField::all()
-      } else {
-        FieldSet::from_raw(args.field)
-      };
-
-      if let Some(producer) = vndb
-        .find_producer(&id)
-        .fields(fields)
-        .send()
-        .await?
-        .results
-        .pop_front()
-      {
-        println!("{}", to_string_pretty(&producer)?);
-      } else {
-        println!("producer not found: {id}");
-      }
+      fetch_and_print!(id, find_producer, ProducerField);
     }
     VndbId::Release(id) => {
-      let fields = if args.field.is_empty() {
-        ReleaseField::all()
-      } else {
-        FieldSet::from_raw(args.field)
-      };
-
-      if let Some(release) = vndb
-        .find_release(&id)
-        .fields(fields)
-        .send()
-        .await?
-        .results
-        .pop_front()
-      {
-        println!("{}", to_string_pretty(&release)?);
-      } else {
-        println!("release not found: {id}");
-      }
+      fetch_and_print!(id, find_release, ReleaseField);
     }
     VndbId::Staff(id) => {
-      let fields = if args.field.is_empty() {
-        StaffField::all()
-      } else {
-        FieldSet::from_raw(args.field)
-      };
-
-      if let Some(staff) = vndb
-        .find_staff(&id)
-        .fields(fields)
-        .send()
-        .await?
-        .results
-        .pop_front()
-      {
-        println!("{}", to_string_pretty(&staff)?);
-      } else {
-        println!("staff not found: {id}");
-      }
+      fetch_and_print!(id, find_staff, StaffField);
     }
     VndbId::Tag(id) => {
-      let fields = if args.field.is_empty() {
-        TagField::all()
-      } else {
-        FieldSet::from_raw(args.field)
-      };
-
-      if let Some(tag) = vndb
-        .find_tag(&id)
-        .fields(fields)
-        .send()
-        .await?
-        .results
-        .pop_front()
-      {
-        println!("{}", to_string_pretty(&tag)?);
-      } else {
-        println!("tag not found: {id}");
-      }
+      fetch_and_print!(id, find_tag, TagField);
     }
     VndbId::Trait(id) => {
-      let fields = if args.field.is_empty() {
-        TraitField::all()
-      } else {
-        FieldSet::from_raw(args.field)
-      };
-
-      if let Some(r#trait) = vndb
-        .find_trait(&id)
-        .fields(fields)
-        .send()
-        .await?
-        .results
-        .pop_front()
-      {
-        println!("{}", to_string_pretty(&r#trait)?);
-      } else {
-        println!("trait not found: {id}");
-      }
+      fetch_and_print!(id, find_trait, TraitField);
     }
     VndbId::User(id) => {
       if let Some(user) = vndb.find_user(&id).await? {
         println!("{}", to_string_pretty(&user)?);
       } else {
-        println!("user not found: {id}");
+        bail!("not found: {id}");
       }
     }
     VndbId::VisualNovel(id) => {
-      let fields = if args.field.is_empty() {
-        VisualNovelField::all()
-      } else {
-        FieldSet::from_raw(args.field)
-      };
-
-      if let Some(visual_novel) = vndb
-        .find_visual_novel(&id)
-        .fields(fields)
-        .send()
-        .await?
-        .results
-        .pop_front()
-      {
-        println!("{}", to_string_pretty(&visual_novel)?);
-      } else {
-        println!("visual novel not found: {id}");
-      }
+      fetch_and_print!(id, find_visual_novel, VisualNovelField);
     }
   }
 
   Ok(())
+}
+
+fn to_value<T: Serialize>(value: &T) -> Result<JsonValue> {
+  let mut value = serde_json::to_value(value)?;
+  strip_null_values(&mut value);
+  Ok(value)
+}
+
+fn strip_null_values(json: &mut JsonValue) {
+  match json {
+    JsonValue::Array(values) => {
+      for value in values {
+        strip_null_values(value);
+      }
+    }
+    JsonValue::Object(map) => {
+      let keys_to_remove = map
+        .iter_mut()
+        .filter_map(|(key, value)| {
+          if value.is_null() {
+            Some(key.clone())
+          } else {
+            strip_null_values(value);
+            None
+          }
+        })
+        .collect_vec();
+
+      for key in keys_to_remove {
+        map.remove(&key);
+      }
+    }
+    _ => {}
+  }
 }
