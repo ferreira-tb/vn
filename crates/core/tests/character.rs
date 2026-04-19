@@ -1,6 +1,6 @@
 use std::sync::LazyLock;
-use vn::CharacterField::*;
-use vn::{CharacterId, Vndb};
+use vn_core::CharacterField::*;
+use vn_core::{CharacterId, Vndb};
 
 const YUKARI: &str = "Kaburagi Yukari";
 const YUKARI_JP: &str = "鏑木 紫";

@@ -1,6 +1,6 @@
 use std::sync::LazyLock;
-use vn::VisualNovelField::*;
-use vn::{VisualNovelId, Vndb};
+use vn_core::VisualNovelField::*;
+use vn_core::{VisualNovelId, Vndb};
 
 const NOVEL: &str = "Yosuga no Sora";
 const NOVEL_JP: &str = "ヨスガノソラ";

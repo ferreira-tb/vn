@@ -1,5 +1,5 @@
-use vn::UserField::{self, *};
-use vn::{UserId, Vndb};
+use vn_core::UserField::{self, *};
+use vn_core::{UserId, Vndb};
 
 #[tokio::test]
 async fn get_user() {

@@ -1,6 +1,6 @@
 use std::sync::LazyLock;
-use vn::TraitField::*;
-use vn::{TraitId, Vndb};
+use vn_core::TraitField::*;
+use vn_core::{TraitId, Vndb};
 
 const AIRHEAD: &str = "Airhead";
 const AIRHEAD_GROUP: &str = "Personality";

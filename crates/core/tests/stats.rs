@@ -1,4 +1,4 @@
-use vn::Vndb;
+use vn_core::Vndb;
 
 #[tokio::test]
 async fn get_stats() {

@@ -1,8 +1,8 @@
 use anyhow::Result;
 use clap::Parser;
 use serde_json::to_string_pretty;
-use vn::http::FieldSet;
-use vn::{
+use vn_core::http::FieldSet;
+use vn_core::{
   CharacterField, ProducerField, ReleaseField, StaffField, TagField, TraitField, VisualNovelField,
   Vndb, VndbId,
 };
