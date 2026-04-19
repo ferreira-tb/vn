@@ -1,5 +1,5 @@
 use strum::VariantArray;
-use vn::http::Endpoint;
+use vn_core::http::Endpoint;
 
 #[test]
 fn endpoints_are_valid() {

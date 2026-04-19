@@ -1,6 +1,6 @@
 use std::sync::LazyLock;
-use vn::StaffField::*;
-use vn::{Language, StaffGender, StaffId, Vndb};
+use vn_core::StaffField::*;
+use vn_core::{Language, StaffGender, StaffId, Vndb};
 
 const SUMIRE: &str = "Uesaka Sumire";
 

@@ -1,6 +1,6 @@
 use std::sync::LazyLock;
-use vn::ProducerField::*;
-use vn::{ProducerId, ProducerType, SortProducerBy, Vndb};
+use vn_core::ProducerField::*;
+use vn_core::{ProducerId, ProducerType, SortProducerBy, Vndb};
 
 const YUZUSOFT: &str = "Yuzusoft";
 

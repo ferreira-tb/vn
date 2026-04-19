@@ -1,6 +1,6 @@
 use std::sync::LazyLock;
-use vn::ReleaseField::*;
-use vn::{ReleaseId, Vndb};
+use vn_core::ReleaseField::*;
+use vn_core::{ReleaseId, Vndb};
 
 const KUSARIHIME: &str = "Kusarihime ~Euthanasia~ Download Edition";
 

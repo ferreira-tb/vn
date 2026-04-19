@@ -1,6 +1,6 @@
 use std::sync::LazyLock;
-use vn::TagField::*;
-use vn::{TagCategory, TagId, Vndb};
+use vn_core::TagField::*;
+use vn_core::{TagCategory, TagId, Vndb};
 
 const FANTASY: &str = "Medieval Fantasy";
 
