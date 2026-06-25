@@ -1,0 +1,11 @@
+*.js linguist-detectable=false
+*.cjs linguist-detectable=false
+*.mjs linguist-detectable=false
+*.html linguist-detectable=false
+*.css linguist-detectable=false
+
+*.kt linguist-detectable=false
+*.kts linguist-detectable=false
+
+justfile linguist-detectable=false
+*.just linguist-detectable=false
